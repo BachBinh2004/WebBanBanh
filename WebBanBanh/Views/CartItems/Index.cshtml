@@ -1,0 +1,66 @@
+﻿@model List<WebBanBanh.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Giỏ hàng của bạn";
+    decimal totalAmount = Model.Sum(item => item.Price * item.Quantity);
+}
+
+<h2>Giỏ hàng của bạn</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price.ToString("N0") VND</td>
+                <td>
+                    <form asp-action="UpdateQuantity" method="post" class="d-flex">
+                        <input type="hidden" name="productId" value="@item.Id" />
+                        <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control me-2" style="width: 80px;" />
+                        <button type="submit" class="btn btn-outline-primary btn-sm">Cập nhật</button>
+                    </form>
+                </td>
+                <td>@((item.Price * item.Quantity).ToString("N0")) VND</td>
+                <td>
+                    <a asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<h4 class="text-end">Tổng tiền: <strong>@totalAmount.ToString("N0") đ</strong></h4>
+
+<div class="mb-3">
+    <a asp-action="Clear" class="btn btn-warning">Xóa tất cả</a>
+
+    <form asp-controller="CartItems" asp-action="Checkout" method="post" class="d-inline">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <input type="hidden" name="cartItems[@i].Id" value="@Model[i].Id" />
+            <input type="hidden" name="cartItems[@i].Quantity" value="@Model[i].Quantity" />
+        }
+        <button type="submit" class="btn btn-success">Đặt hàng</button>
+    </form>
+</div>
+
+<div class="mt-3">
+    <form method="post" action="@Url.Action("CreatePaymentUrlVnpay", "Payment")" id="vnpayForm">
+        <input type="hidden" name="OrderType" value="Banh" />
+        <input type="hidden" name="amount" id="vnpayAmount" value="@totalAmount.ToString("0.##")" />
+        <button type="submit" class="btn btn-warning">Thanh toán VNPAY</button>
+    </form>
+
+    <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+</div>

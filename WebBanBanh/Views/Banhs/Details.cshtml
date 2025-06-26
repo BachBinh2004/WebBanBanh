@@ -1,0 +1,176 @@
+﻿@model WebBanBanh.Models.Banh
+
+@{
+	ViewData["Title"] = @Model.TenBanh;
+}
+
+<h1>@Model.MaLbNavigation.TenLb</h1>
+
+<div class="container mt-4">
+	<div class="row">
+		<!-- Cột hình ảnh bên trái -->
+		<div class="col-md-4 text-center">
+			<img src="@Model.Hinhanh" alt="@Model.TenBanh" class="img-fluid rounded">
+		</div>
+
+		<!-- Cột thông tin bên phải -->
+		<div class="col-md-8">
+			<h1 class="text-center">@Model.TenBanh</h1>
+			<hr />
+			<dl class="row">
+				<h4 class="text-center">@Model.MaLbNavigation.TenLb  ||  @Model.MaBanh</h4>
+				<dt class="col-sm-4">Ngày sản xuất</dt>
+				<dd class="col-sm-8">@Model.Nsx</dd>
+
+				<dt class="col-sm-4">Hạn sử dụng</dt>
+				<dd class="col-sm-8">@Model.Hsd</dd>
+
+				<dt class="col-sm-4">Mô tả</dt>
+				<dd class="col-sm-8">@Model.Mota</dd>
+
+				<dt class="col-sm-4">Giá tiền</dt>
+				<dd class="col-sm-8">@Model.Gia.ToString("N0") VNĐ</dd>
+			</dl>
+
+			<!-- Điều chỉnh số lượng -->
+			<div class="d-flex align-items-center mt-3">
+				<button class="btn btn-outline-primary" id="decreaseQty">-</button>
+				<input type="text" id="quantity" value="1" class="form-control text-center mx-2" style="width: 50px;" readonly>
+				<button class="btn btn-outline-primary" id="increaseQty">+</button>
+
+				<!-- Nút thêm vào giỏ hàng -->
+				<button class="btn btn-primary ms-3" onclick="addToCart('@Model.MaBanh')">
+					Thêm vào giỏ hàng
+				</button>
+			</div>
+
+			<!-- Nút điều hướng -->
+			<div class="mt-3">
+				@* <a asp-action="HoaDon" asp-route-id="@Model?.MaBanh" class="btn btn-warning">Mua ngay</a> *@
+				<a id="buyNowBtn" class="btn btn-warning">Mua ngay</a>
+				<a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+				
+
+
+			</div>
+			<!-- Nút điều hướng -->
+			<div class="mt-3">
+				<form method="post" action="@Url.Action("CreatePaymentUrlVnpay", "Payment")" id="vnpayForm">
+					<input type="hidden" name="OrderType" value="Banh" />
+					<input type="hidden" name="amount" id="vnpayAmount" value="@(((decimal)Model.Gia).ToString("0.##"))" />
+
+					<button type="submit" class="btn btn-warning">Thanh toán VNPAY</button>
+				</form>
+
+				<a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+			</div>
+
+
+			<hr />
+			<div style="display: flex; align-items: center;">
+				<img src="/image/shipbox.png" alt="Miễn phí giao hàng" style="width: 50px; height: 50px; margin-right: 10px;">
+				<div>
+					<strong>Miễn phí giao hàng</strong>
+					<p>Miễn phí giao hàng cho đơn hàng từ 400k khi đặt qua fanpage.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<br />
+<hr />
+<br />
+<h2 class="text-center">Bánh liên quan</h2>
+<br />
+
+<div>
+	@if (ViewBag.banhLB2 != null)
+	{
+		var banhLB2 = (List<WebBanBanh.Models.Banh>)ViewBag.banhLB2;
+		var banhKhac = banhLB2.Where(b => b.MaBanh != Model.MaBanh).ToList(); // Lọc bỏ sản phẩm hiện tại
+
+		<div id="carouselLB2" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-inner">
+				@for (int i = 0; i < banhKhac.Count; i += 3)
+				{
+					<div class="carousel-item @(i == 0 ? "active" : "")">
+						<div class="row row-cols-1 row-cols-md-3 g-4">
+							@for (int j = i; j < i + 3 && j < banhKhac.Count; j++)
+							{
+								var item = banhKhac[j];
+								<div class="col">
+									<div class="card h-100 shadow-lg border-2 border-pink">
+										<a asp-action="Details" asp-route-id="@item.MaBanh">
+											<img src="@item.Hinhanh" class="card-img-top rounded-top hover-img" alt="@item.TenBanh" style="height: 250px; object-fit: cover;">
+										</a>
+										<div class="card-body text-center">
+											<h5 class="card-title text-pink fw-bold">@item.TenBanh</h5>
+											<p class="card-text text-danger fw-bold fs-5">@item.Gia.ToString() VNĐ</p>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+				}
+			</div>
+
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselLB2" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselLB2" data-bs-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</button>
+	}
+</div>
+
+<!-- JavaScript điều chỉnh số lượng -->
+<script>
+	document.getElementById("increaseQty").addEventListener("click", function () {
+		let qty = document.getElementById("quantity");
+		qty.value = parseInt(qty.value) + 1;
+	});
+
+	document.getElementById("decreaseQty").addEventListener("click", function () {
+		let qty = document.getElementById("quantity");
+		if (parseInt(qty.value) > 1) {
+			qty.value = parseInt(qty.value) - 1;
+		}
+	});
+	document.addEventListener("DOMContentLoaded", function () {
+		let storedQty = sessionStorage.getItem("SoLuongBanh");
+		if (storedQty) {
+			document.getElementById("quantity").value = storedQty;
+		}
+	});
+
+	document.getElementById("buyNowBtn").addEventListener("click", function () {
+		let qty = document.getElementById("quantity").value;
+		let maBanh = "@Model?.MaBanh";
+		window.location.href = `/Banhs/HoaDon?id=${maBanh}&SoLuongBanh=${qty}`;
+	});
+	function addToCart(maBanh) 
+	{
+		let soLuong = document.getElementById("quantity").value;
+
+		fetch(`/CartItems/AddToCart?id=${maBanh}&soLuong=${soLuong}`, {
+			method: "GET",
+			headers: { "Content-Type": "application/json" }
+		})
+		.then(response => response.json())
+		.then(data => {
+			console.log("Dữ liệu trả về:", data);
+			if (data.success) {
+				document.getElementById("cartBadge").innerText = data.totalQuantity;
+				alert("🛒 Đã thêm vào giỏ hàng!");
+			} else {
+				alert("⚠️ " + data.message);
+			}
+		})
+		.catch(error => {
+			console.error("Lỗi:", error);
+			alert("🛒 Đã thêm vào giỏ hàng!");
+		});
+	}
+</script>

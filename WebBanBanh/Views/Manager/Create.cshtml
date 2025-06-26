@@ -1,0 +1,216 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Thêm mới dữ liệu";
+    var table = ViewData["Table"] as string;
+}
+
+<h2>Thêm mới @table</h2>
+
+<form method="post" action="/Manager/Create">
+    <input type="hidden" name="table" value="@table" />
+
+    @if (table == "Banhs")
+    {
+        <label>Mã bánh:</label>
+        <input type="text" name="MaBanh" class="form-control" required />
+        <label>Tên bánh:</label>
+        <input type="text" name="TenBanh" class="form-control" required />
+        <label>NSX:</label>
+        <input type="date" name="Nsx" class="form-control" required />
+        <label>HSD:</label>
+        <input type="date" name="Hsd" class="form-control" required />
+        <label>Mô tả:</label>
+        <textarea name="Mota" class="form-control"></textarea>
+        <label>Hình ảnh:</label>
+        <input type="text" name="Hinhanh" class="form-control" />
+        <label>Loại bánh:</label>
+        <input type="text" name="TenLb" class="form-control" required />
+        <label>Giá:</label>
+        <input type="number" name="Gia" class="form-control" required />
+    }
+    else if (table == "Ctddhs")
+    {
+        <label>Mã nguyên liệu:</label>
+        <input type="text" name="MaNl" class="form-control" required />
+        <label>Mã đơn đặt hàng:</label>
+        <input type="text" name="MaDdh" class="form-control" required />
+        <label>Đơn giá mua:</label>
+        <input type="number" name="Dgmua" class="form-control" required />
+        <label>Số lượng:</label>
+        <input type="number" name="Sl" class="form-control" required />
+    }
+    else if (table == "NhanViens")
+    {
+        <label>Mã nhân viên:</label>
+        <input type="text" name="MaNv" class="form-control" required />
+        <label>Tên nhân viên:</label>
+        <input type="text" name="TenNv" class="form-control" required />
+        <label>Giới tính:</label>
+        <select name="GioiTinh" class="form-control">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+        <label>Ngày sinh:</label>
+        <input type="date" name="NgaySinh" class="form-control" required />
+        <label>Chức vụ:</label>
+        <input type="text" name="ChucVu" class="form-control" required />
+        <label>Địa chỉ:</label>
+        <input type="text" name="Dcnv" class="form-control" required />
+        <label>Số điện thoại:</label>
+        <input type="text" name="Sdtnv" class="form-control" required />
+    }
+    else if (table == "HoaDons")
+    {
+        <label>Mã hóa đơn:</label>
+        <input type="text" name="MaHd" class="form-control" required />
+        <label>Ngày lập:</label>
+        <input type="date" name="NgayLap" class="form-control" required />
+        <label>Ngày giao dịch:</label>
+        <input type="date" name="NgayGd" class="form-control" required />
+        <label>Hình thức:</label>
+        <input type="text" name="HinhThuc" class="form-control" required />
+        <label>Mã khách hàng:</label>
+        <input type="text" name="MaKh" class="form-control" required />
+        <label>Mã nhân viên:</label>
+        <input type="text" name="MaNv" class="form-control" required />
+    }
+    else if (table == "TaiKhoans")
+    {
+        <label>Mã tài khoản:</label>
+        <input type="text" name="MaTk" class="form-control" required />
+        <label>Mã loại tài khoản:</label>
+        <input type="text" name="MaLtk" class="form-control" required />
+        <label>Tên đăng nhập:</label>
+        <input type="text" name="TenDn" class="form-control" required />
+        <label>Mật khẩu:</label>
+        <input type="password" name="Mk" class="form-control" required />
+    }
+    else if (table == "KhachHangs")
+    {
+        <label>Mã khách hàng:</label>
+        <input type="text" name="MaKh" class="form-control" required />
+        <label>Tên khách hàng:</label>
+        <input type="text" name="TenKh" class="form-control" required />
+        <label>Giới tính:</label>
+        <select name="GioiTinh" class="form-control">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+        <label>Địa chỉ:</label>
+        <input type="text" name="Dckh" class="form-control" required />
+        <label>Số điện thoại:</label>
+        <input type="text" name="Sdtkh" class="form-control" required />
+        <label>Mã loại khách hàng:</label>
+        <input type="text" name="MaLkh" class="form-control" required />
+    }
+    else if (table == "PhieuNhs")
+    {
+        <label>Mã phiếu nhập hàng:</label>
+        <input type="text" name="MaPnh" class="form-control" required />
+        <label>Ngày nhập hàng:</label>
+        <input type="date" name="NgayNh" class="form-control" required />
+        <label>Mã đơn đặt hàng:</label>
+        <input type="text" name="MaDdh" class="form-control" required />
+        <label>Mã nhân viên:</label>
+        <input type="text" name="MaNv" class="form-control" required />
+    }
+    else if (table == "Nccs")
+    {
+        <label>Mã nhà cung cấp:</label>
+        <input type="text" name="MaNcc" class="form-control" required />
+        <label>Tên nhà cung cấp:</label>
+        <input type="text" name="TenNcc" class="form-control" required />
+        <label>Địa chỉ:</label>
+        <input type="text" name="Dcncc" class="form-control" required />
+        <label>Số điện thoại:</label>
+        <input type="text" name="Sdtncc" class="form-control" required />
+    }
+    else if (table == "NguyenLieus")
+    {
+        <label>Mã nguyên liệu:</label>
+        <input type="text" name="MaNl" class="form-control" required />
+        <label>Tên nguyên liệu:</label>
+        <input type="text" name="TenNl" class="form-control" required />
+    }
+    else if (table == "Cthds")
+    {
+        <label>Mã bánh:</label>
+        <input type="text" name="MaBanh" class="form-control" required />
+        <label>Mã hóa đơn:</label>
+        <input type="text" name="MaHd" class="form-control" required />
+        <label>Đơn giá bán:</label>
+        <input type="number" name="Dgban" class="form-control" required />
+        <label>Số lượng:</label>
+        <input type="number" name="Sl" class="form-control" required />
+    }
+    else if (table == "Ctpghs")
+    {
+        <label>Mã bánh:</label>
+        <input type="text" name="MaBanh" class="form-control" required />
+        <label>Mã phiếu giao hàng:</label>
+        <input type="text" name="MaPgh" class="form-control" required />
+        <label>Số lượng:</label>
+        <input type="number" name="Sl" class="form-control" required />
+    }
+	else if (table == "Ctdnhs")
+	{
+		<label>Mã nguyên liệu:</label>
+		<input type="text" name="MaNl" class="form-control" required />
+		<label>Mã đơn đặt hàng:</label>
+		<input type="text" name="MaDdh" class="form-control" required />
+		<label>Mã phiếu nhập hàng:</label>
+		<input type="text" name="MaPnh" class="form-control" required />
+		<label>Số lượng:</label>
+		<input type="number" name="Sl" class="form-control" required />
+	}
+	else if (table == "DonDhs")
+	{
+		<label>Mã đơn đặt hàng:</label>
+		<input type="text" name="MaDdh" class="form-control" required />
+		<label>Ngày đặt hàng:</label>
+		<input type="date" name="NgayDh" class="form-control" required />
+		<label>Mã khách hàng:</label>
+		<input type="text" name="MaKh" class="form-control" required />
+		<label>Mã nhân viên:</label>
+		<input type="text" name="MaNv" class="form-control" required />
+	}
+	else if (table == "LoaiBanhs")
+	{
+		<label>Mã loại bánh:</label>
+		<input type="text" name="MaLb" class="form-control" required />
+		<label>Tên loại bánh:</label>
+		<input type="text" name="TenLb" class="form-control" required />
+	}
+    else if (table == "LoaiKhs")
+    {
+        <label>Mã loại khách hàng:</label>
+        <input type="text" name="MaLkh" class="form-control" required />
+        <label>Tên loại khách hàng:</label>
+        <input type="text" name="TenLkh" class="form-control" required />
+    }
+    else if (table == "LoaiTks")
+    {
+        <label>Mã loại tài khoản:</label>
+        <input type="text" name="MaLtk" class="form-control" required />
+        <label>Tên loại tài khoản:</label>
+        <input type="text" name="TenLtk" class="form-control" required />
+    }
+    else if (table == "PhieuGhs")
+    {
+        <label>Mã phiếu giao hàng:</label>
+        <input type="text" name="MaPgh" class="form-control" required />
+        <label>Ngày giao hàng:</label>
+        <input type="date" name="NgayGh" class="form-control" required />
+        <label>Mã hóa đơn:</label>
+        <input type="text" name="MaHd" class="form-control" required />
+        <label>Mã nhân viên:</label>
+        <input type="text" name="MaNv" class="form-control" required />
+    }
+    
+    else
+    {
+        <p>Bảng không được hỗ trợ hoặc chưa được định nghĩa form.</p>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">Thêm</button>
+</form>

@@ -1,0 +1,24 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Xác nhận xóa dữ liệu";
+    var table = ViewData["Table"] as string;
+}
+
+<div class="container mt-5">
+    <h2 class="text-danger">Xác nhận xóa bản ghi trong bảng: <strong>@table</strong></h2>
+
+    <div class="alert alert-warning mt-3">
+        <p><strong>Chú ý:</strong> Hành động này sẽ xóa vĩnh viễn bản ghi khỏi cơ sở dữ liệu.</p>
+    </div>
+
+    <form method="post" asp-area="Admin" asp-controller="Admin" asp-action="ConfirmDelete"
+          asp-route-table="@table" asp-route-id="@Model.Id">
+        <div class="mb-3">
+            <label class="form-label">ID:</label>
+            <input type="text" class="form-control" value="@Model.Id" readonly />
+        </div>
+
+        <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+        <a asp-action="Index" asp-route-selectedTable="@table" class="btn btn-secondary ms-2">Hủy</a>
+    </form>
+</div>

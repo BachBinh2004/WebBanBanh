@@ -1,0 +1,243 @@
+﻿@{
+    Layout = "_Layout";
+    ViewBag.Title = "Dashboard Tiệm Bánh";
+}
+
+<style>
+    :root {
+        --primary-color: #003366; /* màu xanh đậm */
+        --hover-color: #0059b3; /* xanh nhạt hơn để hover */
+        --bg-light: #f8f9fa;
+    }
+
+    body {
+        background-color: var(--bg-light);
+    }
+
+    .bg-dark {
+        background-color: var(--primary-color) !important;
+    }
+
+    .nav-link.text-white {
+        color: white;
+        font-weight: 500;
+    }
+
+        .nav-link.text-white:hover,
+        .nav-link.text-white.active {
+            background-color: var(--hover-color);
+            color: #fff;
+            border-radius: 4px;
+        }
+
+    h3, h4, h5 {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+            border-color: var(--hover-color);
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .tab-content {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .list-group-item {
+        border: none;
+    }
+</style>
+
+
+<div class="d-flex" style="min-height: 100vh">
+    <!-- Sidebar -->
+    <div class="bg-dark text-white p-3" style="width: 250px;">
+        <h4 class="text-center mb-4 text-white">🍞 Quản lý Tiệm Bánh</h4>
+        <ul class="nav flex-column nav-pills me-3" id="tabMenu" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link text-white active" id="thongtin-tab" data-bs-toggle="pill" data-bs-target="#thongtin" type="button" role="tab">Thông tin</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link text-white" id="thongke-tab" data-bs-toggle="pill" data-bs-target="#thongke" type="button" role="tab">Thống kê</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link text-white" id="lamdon-tab" data-bs-toggle="pill" data-bs-target="#lamdon" type="button" role="tab">Làm đơn</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link text-white" id="tinhtrang-tab" data-bs-toggle="pill" data-bs-target="#tinhtrang" type="button" role="tab">Tình trạng</button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="tab-content flex-grow-1 p-4 bg-light" id="tabContent">
+        <!-- TAB: Thông tin -->
+        <div class="tab-pane fade show active" id="thongtin" role="tabpanel" aria-labelledby="thongtin-tab">
+            <h3 class="mb-4">Thông tin chung</h3>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Bánh (@ViewBag.TotalBanhs)</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in ViewBag.BanhsList)
+                            {
+                                <li class="list-group-item">@item.MaBanh - @item.TenBanh - @String.Format("{0:N0}", item.Gia) VND</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Loại bánh (@ViewBag.TotalTypes)</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in ViewBag.TypesList)
+                            {
+                                <li class="list-group-item">@item.MaLb - @item.TenLb</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Khách hàng (@ViewBag.TotalCustomers)</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in ViewBag.CustomersList)
+                            {
+                                <li class="list-group-item">@item.MaKh - @item.TenKh - SĐT: @item.Sdtkh</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Nhân viên (@ViewBag.TotalEmployees)</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in ViewBag.EmployeesList)
+                            {
+                                <li class="list-group-item">@item.MaNv - @item.TenNv - Chức vụ: @item.ChucVu</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Nhà cung cấp (@ViewBag.TotalSuppliers)</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in ViewBag.SuppliersList)
+                            {
+                                <li class="list-group-item">@item.MaNcc - @item.TenNcc - SĐT: @item.Sdtncc</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Thống kê -->
+        <div class="tab-pane fade" id="thongke" role="tabpanel" aria-labelledby="thongke-tab">
+            <h3 class="mb-4">Thống kê doanh thu</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-header bg-dark text-white">Hôm nay</div>
+                        <div class="card-body">@ViewBag.DailyRevenue VND</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-header bg-dark text-white">Tháng này</div>
+                        <div class="card-body">@ViewBag.MonthlyRevenue VND</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-header bg-dark text-white">Năm nay</div>
+                        <div class="card-body">@ViewBag.YearlyRevenue VND</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Top bánh bán chạy</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in ViewBag.TopProducts)
+                            {
+                                <li class="list-group-item">@item.TenBanh: @item.Sold cái</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Khách hàng thân thiết</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var kh in ViewBag.LoyalCustomers)
+                            {
+                                <li class="list-group-item">@kh.TenKh (Mã: @kh.MaKh) - @kh.SoLanMua đơn</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Top khách hàng</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var kh in ViewBag.TopCustomers)
+                            {
+                                <li class="list-group-item">@kh.TenKh: @kh.TotalOrders đơn</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">Hiệu suất nhân viên</div>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var nv in ViewBag.EmployeePerformance)
+                            {
+                                <li class="list-group-item">@nv.TenNv: @nv.OrdersHandled đơn</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Làm đơn -->
+        <div class="tab-pane fade" id="lamdon" role="tabpanel" aria-labelledby="lamdon-tab">
+            <h3 class="mb-4">Làm đơn mới</h3>
+            <a href="@Url.Action("Create", "Admin", new { table = "PhieuGhs" })" class="btn btn-secondary ms-2">+ Tạo phiếu giao hàng</a>
+            <a href="@Url.Action("Create", "Admin", new { table = "DonDhs" })" class="btn btn-secondary ms-2">+ Tạo Đơn đặt hàng</a>
+            <a href="@Url.Action("Create", "Admin", new { table = "PhieuNhs" })" class="btn btn-secondary ms-2">+ Tạo phiếu nhận hàng</a>
+        </div>
+
+        <!-- TAB: Tình trạng -->
+        <div class="tab-pane fade" id="tinhtrang" role="tabpanel" aria-labelledby="tinhtrang-tab">
+            <h3 class="mb-4">Nguyên liệu sắp hết</h3>
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">Cảnh báo tồn kho thấp</div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in ViewBag.LowStockNguyenLieu)
+                    {
+                        <li class="list-group-item">Mã NL: @item.MaNl, SL: @item.Sl</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,0 +1,79 @@
+﻿@model WebBanBanh.Models.HoaDon
+
+@{
+    ViewData["Title"] = "Chi Tiết Hóa Đơn";
+}
+
+<h2 class="text-center">Chi Tiết Hóa Đơn</h2>
+
+<dl class="row border p-3 shadow-sm bg-light rounded">
+    <dt class="col-sm-4 font-weight-bold">Mã Hóa Đơn</dt>
+    <dd class="col-sm-8">@Model.MaHd</dd>
+
+    <dt class="col-sm-4 font-weight-bold">Ngày Lập</dt>
+    <dd class="col-sm-8">
+        <input type="date" class="form-control" name="NgayLap"
+               value="@(Model.NgayLap != DateTime.MinValue ? Model.NgayLap.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))" />
+    </dd>
+
+    <dt class="col-sm-4 font-weight-bold">Ngày Giao Dịch</dt>
+    <dd class="col-sm-8">
+        <input type="date" class="form-control" name="NgayGd"
+               value="@(Model.NgayGd != DateTime.MinValue ? Model.NgayGd.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))" />
+    </dd>
+
+   @*  <div class="form-group">
+        <label asp-for="Nsx" class="control-label"></label>
+        <input asp-for="Nsx" class="form-control" type="date" />
+        <span asp-validation-for="Nsx" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Hsd" class="control-label"></label>
+        <input asp-for="Hsd" class="form-control" type="date" />
+        <span asp-validation-for="Hsd" class="text-danger"></span>
+    </div>
+ *@
+    <dt class="col-sm-4 font-weight-bold">Sản phẩm</dt>
+    <dd class="col-sm-8">@ViewData["TenBanh"]<br> <img src="@ViewData["HINHANH"]" alt="Hình ảnh sản phẩm" style="max-width: 100px; max-height: 100px;" /></dd>
+
+    <dt class="col-sm-4 font-weight-bold">Đơn giá</dt>
+    <dd class="col-sm-8">@ViewData["GiaBanh"] VND</dd>
+
+    <dt class="col-sm-4 font-weight-bold">Số lượng</dt>
+    <dd class="col-sm-8">@ViewData["Quantity"]</dd>
+
+    <dt class="col-sm-4 font-weight-bold">Hình Thức Giao Dịch</dt>
+    <dd class="col-sm-8">
+        <select class="form-select" name="HinhThuc">
+            <option value="Đặt Bánh" selected="@(Model.HinhThuc == "Đặt Bánh")">Đặt Bánh</option>
+            <option value="Lấy Tại Chỗ" selected="@(Model.HinhThuc == "Lấy Tại Chỗ")">Lấy Tại Chỗ</option>
+        </select>
+    </dd>
+
+
+    <dt class="col-sm-4 font-weight-bold">Mã Khách Hàng</dt>
+    <dd class="col-sm-8">@Model.MaKh</dd>
+
+    <dt class="col-sm-4 font-weight-bold">Mã Nhân Viên</dt>
+    <dd class="col-sm-8">@Model.MaNv</dd>
+</dl>
+
+<form method="post" asp-action="QR">
+    <!-- Input hidden để gửi dữ liệu về Controller -->
+    <input type="hidden" name="MaHD" value="@Model.MaHd" />
+    <input type="hidden" name="NgayLap" value="@Model.NgayLap.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="NgayGD" value="@Model.NgayGd.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="HinhThuc" value="@Model.HinhThuc" />
+    <input type="hidden" name="MaKH" value="@Model.MaKh" />
+    <input type="hidden" name="MaNV" value="@Model.MaNv" />
+
+    <!-- Thông tin chi tiết hóa đơn (CTHD) -->
+    <input type="hidden" name="MaBanh" value="@ViewData["MaBanh"]" />
+    <input type="hidden" name="DGBan" value="@ViewData["GiaBanh"]" />
+    <input type="hidden" name="SL" value="@ViewData["Quantity"]" />
+
+    <div class="text-center mt-3">
+        <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+        <button type="submit" class="btn btn-warning">Mua ngay</button>
+    </div>
+</form>

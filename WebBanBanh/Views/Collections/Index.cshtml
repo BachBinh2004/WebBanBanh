@@ -1,0 +1,184 @@
+﻿@model IEnumerable<WebBanBanh.Models.Banh>
+
+@{
+    ViewData["Title"] = string.IsNullOrEmpty(ViewBag.LoaiBanh) ? "Danh sách bánh" : ViewBag.LoaiBanh;
+    var temp = 0;
+    switch (ViewBag.LoaiBanh)
+    {
+        case "Bánh Mì":
+            temp = 1;
+            break;
+        case "Bánh Ngọt":
+            temp = 2;
+            break;
+        case "Bánh Kem":
+            temp = 3;
+            break;
+        case "Bánh Yêu Cầu":
+            temp = 4;
+            break;
+        case "Bánh Theo Mùa":
+            temp = 5;
+            break;
+        default:
+            temp = 0; // Khi không chọn loại nào, hiển thị "Tất cả sản phẩm"
+            break;
+    }
+}
+<img src="~/image/anhminhhoa.png" alt="Ảnh minh họa" class="img-fluid" />
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Bộ lọc bên trái -->
+        <aside class="col-md-3">
+            <h4 class="mb-3">Bộ lọc</h4>
+
+            <form method="get" asp-action="Index">
+                <!-- Tìm kiếm theo tên sản phẩm -->
+                <div class="mb-3">
+                    <label for="TenBanh" class="form-label">Tìm kiếm:</label>
+                    <input type="text" name="TenBanh" id="TenBanh" class="form-control" placeholder="Nhập tên sản phẩm..." value="@ViewBag.TenBanh">
+                </div>
+                <!-- Lọc theo loại bánh -->
+                <div class="mb-3">
+                    <label for="LoaiBanh" class="form-label">Loại bánh:</label>
+                    <select name="LoaiBanh" id="LoaiBanh" class="form-select">
+                        <option value="" selected="@string.IsNullOrEmpty(ViewBag.LoaiBanh) ">Tất cả</option>
+                        <option value="Bánh Mì" selected="@(ViewBag.LoaiBanh == "Bánh Mì")">Bánh Mì</option>
+                        <option value="Bánh Ngọt" selected="@(ViewBag.LoaiBanh == "Bánh Ngọt")">Bánh Ngọt</option>
+                        <option value="Bánh Kem" selected="@(ViewBag.LoaiBanh == "Bánh Kem")">Bánh Kem</option>
+                        <option value="Bánh Yêu Cầu" selected="@(ViewBag.LoaiBanh == "Bánh Yêu Cầu")">Bánh theo yêu cầu</option>
+                        <option value="Bánh Theo Mùa" selected="@(ViewBag.LoaiBanh == "Bánh Theo Mùa")">Bánh theo mùa</option>
+                    </select>
+                </div>
+
+                <!-- Sắp xếp chung -->
+                <div class="mb-3">
+                    <label for="SapXep" class="form-label">Sắp xếp:</label>
+                    <select name="SapXep" id="SapXep" class="form-select">
+                        <option value="">Không sắp xếp</option>
+                        <option value="gia_asc" selected="@(ViewBag.SapXep == "gia_asc")">Giá: Thấp đến cao</option>
+                        <option value="gia_desc" selected="@(ViewBag.SapXep == "gia_desc")">Giá: Cao đến thấp</option>
+                        <option value="ten_asc" selected="@(ViewBag.SapXep == "ten_asc")">Tên: A-Z</option>
+                        <option value="ten_desc" selected="@(ViewBag.SapXep == "ten_desc")">Tên: Z-A</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Áp dụng</button>
+            </form>
+
+
+        </aside>
+        <!-- Hiển thị bánh dạng card -->
+        <section class="col-md-9">
+            <div class="col-md-12 text-center">
+                <h1 class="mt-3 display-1 fw-bold section-title">
+                    @(temp == 0 ? "Tất cả sản phẩm" :
+                        temp == 1 ? "Bánh Mì" :
+                        temp == 2 ? "Bánh Ngọt" :
+                        temp == 3 ? "Bánh Kem" :
+                        temp == 4 ? "Bánh Yêu Cầu" :
+                        "Bánh Theo Mùa")
+                </h1>
+            </div>
+
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                @if (!Model.Any())
+                {
+                    <p class="text-center text-muted">Không tìm thấy sản phẩm phù hợp.</p>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-lg border-2">
+                                <a href="/banhs/details/@item.MaBanh">
+                                    <img src="@item.Hinhanh" class="card-img-top rounded-top hover-img" alt="@item.TenBanh" style="height: 250px; object-fit: cover;">
+                                </a>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">@item.TenBanh</h5>
+                                    <p class="card-text">Giá: <strong>@item.Gia VNĐ</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                            <a class="page-link" href="?LoaiBanh=@ViewBag.LoaiBanh&SapXep=@ViewBag.SapXep&page=@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </section>
+    </div>
+</div>
+<style>
+    /* Hiệu ứng hover cho hình ảnh trong card */
+    .card-img-container {
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .img-hover-effect {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+        .img-hover-effect:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    /* Giao diện tối cho bộ lọc */
+    aside h4, label, select, input {
+        color: #f0f0f0;
+    }
+
+        select.form-select,
+        input.form-control {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            color: #f0f0f0;
+        }
+
+    /* Giao diện tối cho dropdown menu */
+    .dropdown-menu {
+        background-color: #1e1e1e !important;
+        color: #f0f0f0;
+    }
+
+    .dropdown-item {
+        color: #f0f0f0 !important;
+    }
+
+        .dropdown-item:hover {
+            background-color: #333 !important;
+            color: #ffffff !important;
+        }
+
+    /* Tiêu đề nổi bật */
+    .section-title {
+        color: #ffffff;
+        font-size: 2.5rem;
+        text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Card sản phẩm */
+    .card {
+        background-color: #1e1e1e;
+        color: #f0f0f0;
+    }
+
+    .card-title, .card-text {
+        color: #f0f0f0;
+    }
+
+</style>

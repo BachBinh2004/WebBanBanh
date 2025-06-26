@@ -1,0 +1,60 @@
+﻿@model WebBanBanh.Models.Banh
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Banh</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TenBanh)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TenBanh)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nsx)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nsx)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Hsd)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Hsd)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Mota)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Mota)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Hinhanh)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Hinhanh)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Gia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Gia)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaLbNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaLbNavigation.MaLb)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaBanh">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,256 @@
+﻿@model dynamic
+@{
+	ViewData["Title"] = "Chỉnh sửa dữ liệu";
+	var table = ViewData["Table"] as string;
+}
+
+<h2>Chỉnh sửa @table</h2>
+
+<form method="post" action="/Admin/admin/Edit/@table/@(
+													table == "Banhs" ? Model.MaBanh :
+													table == "Ctddhs" ? Model.MaNl :
+													table == "NhanViens" ? Model.MaNv :
+													table == "HoaDons" ? Model.MaHd :
+													table == "TaiKhoans" ? Model.MaTk :
+													table == "KhachHangs" ? Model.MaKh :
+													table == "PhieuNhs" ? Model.MaPnh :
+													table == "Nccs" ? Model.MaNcc :
+													table == "NguyenLieus" ? Model.MaNl :
+													table == "Cthds" ? Model.MaBanh :
+													table == "Ctpghs" ? Model.MaBanh :
+													table == "Ctdnhs" ? Model.MaNl :
+													table == "DonDhs" ? Model.MaDdh :
+													table == "LoaiBanhs" ? Model.MaLb :
+													table == "LoaiKhs" ? Model.MaLkh :
+													table == "LoaiTks" ? Model.MaLtk :
+													table == "PhieuGhs" ? Model.MaPgh : "Unknown"
+												)">
+	<input type="hidden" name="table" value="@table" />
+	@if (table == null)
+	{
+		<p class="text-danger">Không tìm thấy dữ liệu hoặc bảng không hợp lệ.</p>
+		<a href="/Admin/admin/Index" class="btn btn-secondary">Quay lại</a>
+	}
+
+	@if (table == "Banhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaBanh" />
+		<label>Mã bánh:</label>
+		<input type="text" name="MaBanh" class="form-control" value="@Model.MaBanh" required />
+		<label>Tên bánh:</label>
+		<input type="text" name="TenBanh" class="form-control" value="@Model.TenBanh" required />
+		<label>NSX:</label>
+		<input type="date" name="Nsx" class="form-control" value="@Model.Nsx.ToString("yyyy-MM-dd")" required />
+		<label>HSD:</label>
+		<input type="date" name="Hsd" class="form-control" value="@Model.Hsd.ToString("yyyy-MM-dd")" required />
+		<label>Mô tả:</label>
+		<textarea name="Mota" class="form-control">@Model.Mota</textarea>
+		<label>Hình ảnh:</label>
+		<input type="text" name="Hinhanh" class="form-control" value="@Model.Hinhanh" />
+		<label>Loại bánh:</label>
+		<input type="text" name="TenLb" class="form-control" value="@Model.MaLb" required />
+		<label>Giá:</label>
+		<input type="number" name="Gia" class="form-control" value="@Model.Gia" required />
+	}
+	else if (table == "Ctddhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaNl" />
+		<label>Mã nguyên liệu:</label>
+		<input type="text" name="MaNl" class="form-control" value="@Model.MaNl" required />
+		<label>Mã đơn đặt hàng:</label>
+		<input type="text" name="MaDdh" class="form-control" value="@Model.MaDdh" required />
+		<label>Đơn giá mua:</label>
+		<input type="number" name="Dgmua" class="form-control" value="@Model.Dgmua" required />
+		<label>Số lượng:</label>
+		<input type="number" name="Sl" class="form-control" value="@Model.Sl" required />
+	}
+	else if (table == "NhanViens")
+	{
+		<input type="hidden" name="id" value="@Model.MaNv" />
+		<label>Mã nhân viên:</label>
+		<input type="text" name="MaNv" class="form-control" value="@Model.MaNv" required />
+		<label>Tên nhân viên:</label>
+		<input type="text" name="TenNv" class="form-control" value="@Model.TenNv" required />
+		<label>Giới tính:</label>
+		<select name="GioiTinh" class="form-control">
+			<option value="Nam" selected="@(Model.GioiTinh == "Nam")">Nam</option>
+			<option value="Nữ" selected="@(Model.GioiTinh == "Nữ")">Nữ</option>
+		</select>
+		<label>Ngày sinh:</label>
+		<input type="date" name="NgaySinh" class="form-control" value="@Model.NgaySinh.ToString("yyyy-MM-dd")" required />
+		<label>Chức vụ:</label>
+		<input type="text" name="ChucVu" class="form-control" value="@Model.ChucVu" required />
+		<label>Địa chỉ:</label>
+		<input type="text" name="Dcnv" class="form-control" value="@Model.Dcnv" required />
+		<label>Số điện thoại:</label>
+		<input type="text" name="Sdtnv" class="form-control" value="@Model.Sdtnv" required />
+	}
+	else if (table == "HoaDons")
+	{
+		<input type="hidden" name="id" value="@Model.MaHd" />
+		<label>Mã hóa đơn:</label>
+		<input type="text" name="MaHd" class="form-control" value="@Model.MaHd" required />
+		<label>Ngày lập:</label>
+		<input type="date" name="NgayLap" class="form-control" value="@Model.NgayLap.ToString("yyyy-MM-dd")" required />
+		<label>Ngày giao dịch:</label>
+		<input type="date" name="NgayGd" class="form-control" value="@Model.NgayGd.ToString("yyyy-MM-dd")" required />
+		<label>Hình thức:</label>
+		<input type="text" name="HinhThuc" class="form-control" value="@Model.HinhThuc" required />
+		<label>Mã khách hàng:</label>
+		<input type="text" name="MaKh" class="form-control" value="@Model.MaKh" required />
+		<label>Mã nhân viên:</label>
+		<input type="text" name="MaNv" class="form-control" value="@Model.MaNv" required />
+	}
+	else if (table == "TaiKhoans")
+	{
+		<input type="hidden" name="id" value="@Model.MaTk" />
+		<label>Mã tài khoản:</label>
+		<input type="text" name="MaTk" class="form-control" value="@Model.MaTk" required />
+		<label>Mã loại tài khoản:</label>
+		<input type="text" name="MaLtk" class="form-control" value="@Model.MaLtk" required />
+		<label>Tên đăng nhập:</label>
+		<input type="text" name="TenDn" class="form-control" value="@Model.TenDn" required />
+		<label>Mật khẩu:</label>
+		<input type="password" name="Mk" class="form-control" value="@Model.Mk" required />
+	}
+	else if (table == "KhachHangs")
+	{
+		<input type="hidden" name="id" value="@Model.MaKh" />
+		<label>Mã khách hàng:</label>
+		<input type="text" name="MaKh" class="form-control" value="@Model.MaKh" required />
+		<label>Tên khách hàng:</label>
+		<input type="text" name="TenKh" class="form-control" value="@Model.TenKh" required />
+		<label>Giới tính:</label>
+		<select name="GioiTinh" class="form-control">
+			<option value="Nam" selected="@(Model.GioiTinh == "Nam")">Nam</option>
+			<option value="Nữ" selected="@(Model.GioiTinh == "Nữ")">Nữ</option>
+		</select>
+		<label>Địa chỉ:</label>
+		<input type="text" name="Dckh" class="form-control" value="@Model.Dckh" required />
+		<label>Số điện thoại:</label>
+		<input type="text" name="Sdtkh" class="form-control" value="@Model.Sdtkh" required />
+		<label>Mã loại khách hàng:</label>
+		<input type="text" name="MaLkh" class="form-control" value="@Model.MaLkh" required />
+	}
+	else if (table == "PhieuNhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaPnh" />
+		<label>Mã phiếu nhập hàng:</label>
+		<input type="text" name="MaPnh" class="form-control" value="@Model.MaPnh" required />
+		<label>Ngày nhập hàng:</label>
+		<input type="date" name="NgayNh" class="form-control" value="@Model.NgayNh.ToString("yyyy-MM-dd")" required />
+		<label>Mã đơn đặt hàng:</label>
+		<input type="text" name="MaDdh" class="form-control" value="@Model.MaDdh" required />
+		<label>Mã nhân viên:</label>
+		<input type="text" name="MaNv" class="form-control" value="@Model.MaNv" required />
+	}
+	else if (table == "Nccs")
+	{
+		<input type="hidden" name="id" value="@Model.MaNcc" />
+		<label>Mã nhà cung cấp:</label>
+		<input type="text" name="MaNcc" class="form-control" value="@Model.MaNcc" required />
+		<label>Tên nhà cung cấp:</label>
+		<input type="text" name="TenNcc" class="form-control" value="@Model.TenNcc" required />
+		<label>Địa chỉ:</label>
+		<input type="text" name="Dcncc" class="form-control" value="@Model.Dcncc" required />
+		<label>Số điện thoại:</label>
+		<input type="text" name="Sdtncc" class="form-control" value="@Model.Sdtncc" required />
+	}
+	else if (table == "NguyenLieus")
+	{
+		<input type="hidden" name="id" value="@Model.MaNl" />
+		<label>Mã nguyên liệu:</label>
+		<input type="text" name="MaNl" class="form-control" value="@Model.MaNl" required />
+		<label>Tên nguyên liệu:</label>
+		<input type="text" name="TenNl" class="form-control" value="@Model.TenNl" required />
+	}
+	else if (table == "Cthds")
+	{
+		<input type="hidden" name="id" value="@Model.MaBanh" />
+		<label>Mã bánh:</label>
+		<input type="text" name="MaBanh" class="form-control" value="@Model.MaBanh" required />
+		<label>Mã hóa đơn:</label>
+		<input type="text" name="MaHd" class="form-control" value="@Model.MaHd" required />
+		<label>Đơn giá bán:</label>
+		<input type="number" name="Dgban" class="form-control" value="@Model.Dgban" required />
+		<label>Số lượng:</label>
+		<input type="number" name="Sl" class="form-control" value="@Model.Sl" required />
+	}
+	else if (table == "Ctpghs")
+	{
+		<input type="hidden" name="id" value="@Model.MaBanh" />
+		<label>Mã bánh:</label>
+		<input type="text" name="MaBanh" class="form-control" value="@Model.MaBanh" required />
+		<label>Mã phiếu giao hàng:</label>
+		<input type="text" name="MaPgh" class="form-control" value="@Model.MaPgh" required />
+		<label>Số lượng:</label>
+		<input type="number" name="Sl" class="form-control" value="@Model.Sl" required />
+	}
+	else if (table == "Ctdnhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaNl" />
+		<label>Mã nguyên liệu:</label>
+		<input type="text" name="MaNl" class="form-control" value="@Model.MaNl" required />
+		<label>Mã đơn đặt hàng:</label>
+		<input type="text" name="MaDdh" class="form-control" value="@Model.MaDdh" required />
+		<label>Mã phiếu nhập hàng:</label>
+		<input type="text" name="MaPnh" class="form-control" value="@Model.MaPnh" required />
+		<label>Số lượng:</label>
+		<input type="number" name="Sl" class="form-control" value="@Model.Sl" required />
+	}
+	else if (table == "DonDhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaDdh" />
+		<label>Mã đơn đặt hàng:</label>
+		<input type="text" name="MaDdh" class="form-control" value="@Model.MaDdh" required />
+		<label>Ngày đặt hàng:</label>
+		<input type="date" name="NgayDh" class="form-control" value="@Model.NgayDh.ToString("yyyy-MM-dd")" required />
+		<label>Mã khách hàng:</label>
+		<input type="text" name="MaKh" class="form-control" value="@Model.MaKh" required />
+		<label>Mã nhân viên:</label>
+		<input type="text" name="MaNv" class="form-control" value="@Model.MaNv" required />
+	}
+	else if (table == "LoaiBanhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaLb" />
+		<label>Mã loại bánh:</label>
+		<input type="text" name="MaLb" class="form-control" value="@Model.MaLb" required />
+		<label>Tên loại bánh:</label>
+		<input type="text" name="TenLb" class="form-control" value="@Model.TenLb" required />
+	}
+	else if (table == "LoaiKhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaLkh" />
+		<label>Mã loại khách hàng:</label>
+		<input type="text" name="MaLkh" class="form-control" value="@Model.MaLkh" required />
+		<label>Tên loại khách hàng:</label>
+		<input type="text" name="TenLkh" class="form-control" value="@Model.TenLkh" required />
+	}
+	else if (table == "LoaiTks")
+	{
+		<input type="hidden" name="id" value="@Model.MaLtk" />
+		<label>Mã loại tài khoản:</label>
+		<input type="text" name="MaLtk" class="form-control" value="@Model.MaLtk" required />
+		<label>Tên loại tài khoản:</label>
+		<input type="text" name="TenLtk" class="form-control" value="@Model.TenLtk" required />
+	}
+	else if (table == "PhieuGhs")
+	{
+		<input type="hidden" name="id" value="@Model.MaPgh" />
+		<label>Mã phiếu giao hàng:</label>
+		<input type="text" name="MaPgh" class="form-control" value="@Model.MaPgh" required />
+		<label>Ngày giao hàng:</label>
+		<input type="date" name="NgayGh" class="form-control" value="@Model.NgayGh.ToString("yyyy-MM-dd")" required />
+		<label>Mã hóa đơn:</label>
+		<input type="text" name="MaHd" class="form-control" value="@Model.MaHd" required />
+		<label>Mã nhân viên:</label>
+		<input type="text" name="MaNv" class="form-control" value="@Model.MaNv" required />
+	}
+
+	else
+	{
+		<p>Bảng không được hỗ trợ hoặc chưa được định nghĩa form.</p>
+	}
+	<button type="button" class="btn btn-primary mt-3" onclick="history.back()">Quay về</button>
+	<button type="submit" class="btn btn-primary mt-3">Chỉnh Sửa</button>
+</form>

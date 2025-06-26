@@ -1,0 +1,83 @@
+﻿@model WebBanBanh.Models.HoaDon
+@using Newtonsoft.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    // Lấy dữ liệu giỏ hàng từ Session
+    var cartItemsJson = HttpContextAccessor.HttpContext.Session.GetString("CartItems");
+    var cartItems = string.IsNullOrEmpty(cartItemsJson)
+        ? new List<CartItem>()
+        : JsonConvert.DeserializeObject<List<CartItem>>(cartItemsJson);
+}
+
+<h2 class="text-center">Xác nhận đơn hàng</h2>
+
+<div class="card p-4">
+    <h4>Thông tin hóa đơn</h4>
+    <p><strong>Mã hóa đơn:</strong> @Model.MaHd</p>
+    <p><strong>Ngày lập:</strong> @Model.NgayLap.ToString("dd/MM/yyyy HH:mm")</p>
+    <p><strong>Hình thức nhận hàng:</strong> @Model.HinhThuc</p>
+    <p><strong>Mã khách hàng:</strong> @Model.MaKh</p>
+    <p><strong>Mã nhân viên:</strong> @Model.MaNv</p>
+</div>
+
+<h4 class="mt-4">Chi tiết đơn hàng</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã bánh</th>
+            <th>Tên bánh</th>
+            <th>Hình ảnh</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (cartItems.Any())
+        {
+            @foreach (var item in cartItems)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td><img src="@item.ImageUrl" style="width: 80px; height: 80px;"></td>
+                    <td>@item.Price.ToString("N0") VND</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Price * item.Quantity).ToString("N0")) VND</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Không có sản phẩm trong giỏ hàng</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4 class="text-end">Tổng tiền: <strong>@(cartItems.Sum(item => item.Price * item.Quantity).ToString("N0")) VND</strong></h4>
+
+<div class="text-end mt-4">
+    <a asp-controller="CartItem" asp-action="Index" class="btn btn-secondary">Quay lại giỏ hàng</a>
+    <form asp-controller="Banhs" asp-action="QR" method="post" class="d-inline">
+        <input type="hidden" name="MaHD" value="@Model.MaHd" />
+        <input type="hidden" name="NgayLap" value="@Model.NgayLap.ToString("yyyy-MM-dd")" />
+        <input type="hidden" name="NgayGD" value="@Model.NgayGd.ToString("yyyy-MM-dd")" />
+        <input type="hidden" name="HinhThuc" value="@Model.HinhThuc" />
+        <input type="hidden" name="MaKH" value="@Model.MaKh" />
+        <input type="hidden" name="MaNV" value="@Model.MaNv" />
+        <!-- Thông tin chi tiết hóa đơn (CTHD) -->
+        @for (int i = 0; i < cartItems.Count; i++)
+        {
+            <input type="hidden" name="DSMaBanh[@i]" value="@cartItems[i].Id" />
+            <input type="hidden" name="DSDGBan[@i]" value="@cartItems[i].Price" />
+            <input type="hidden" name="DSSL[@i]" value="@cartItems[i].Quantity" />
+        }
+
+
+
+        <button type="submit" class="btn btn-success">Xác nhận đặt hàng</button>
+    </form>
+</div>

@@ -1,0 +1,382 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Thêm mới dữ liệu";
+    var table = ViewData["Table"] as string;
+}
+
+<h2>Thêm mới @table</h2>
+
+<form asp-area="Admin" asp-controller="Admin" asp-action="Create" asp-route-table="@table" method="post">
+    <input type="hidden" name="table" value="@table" />
+
+    @if (table == "Banhs")
+    {
+        <label>Mã bánh:</label>
+        <input type="text" name="MaBanh" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên bánh:</label>
+        <input type="text" name="TenBanh" class="form-control" required />
+        <label>NSX:</label>
+        <input type="date" name="Nsx" class="form-control" required />
+        <label>HSD:</label>
+        <input type="date" name="Hsd" class="form-control" required />
+        <label>Mô tả:</label>
+        <textarea name="Mota" class="form-control"></textarea>
+        <label>Hình ảnh:</label>
+        <input type="text" name="Hinhanh" class="form-control" />
+        <label>Loại bánh:</label>
+        <select name="TenLb" class="form-control" required>
+            <option value="">-- Chọn loại bánh --</option>
+            @foreach (var loai in ViewBag.LoaiBanhs)
+            {
+                <option value="@loai.MaLb">@loai.TenLb (@loai.MaLb)</option>
+            }
+        </select>
+        <label>Giá:</label>
+        <input type="number" name="Gia" class="form-control" required />
+    }
+    else if (table == "Ctddhs")
+    {
+        <label>Mã nguyên liệu:</label>
+        <select name="MaNl" class="form-control" required>
+            @foreach (var nl in ViewBag.NguyenLieus)
+            {
+                <option value="@nl.MaNl">@nl.TenNl (@nl.MaNl)</option>
+            }
+        </select>
+        <label>Mã đơn đặt hàng:</label>
+        <select name="MaDdh" class="form-control" required>
+            @foreach (var ddh in ViewBag.DonDhs)
+            {
+                <option value="@ddh.MaDdh">Đơn @ddh.MaDdh - @ddh.NgayDh.ToShortDateString()</option>
+            }
+        </select>
+        <label>Đơn giá mua:</label>
+        <input type="number" name="Dgmua" class="form-control" required />
+        <label>Số lượng:</label>
+        <input type="number" name="Sl" class="form-control" required />
+    }
+    else if (table == "NhanViens")
+    {
+        <label>Mã nhân viên:</label>
+        <input type="text" name="MaNv" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên nhân viên:</label>
+        <input type="text" name="TenNv" class="form-control" required />
+        <label>Giới tính:</label>
+        <select name="GioiTinh" class="form-control">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+        <label>Ngày sinh:</label>
+        <input type="date" name="NgaySinh" class="form-control" required />
+        <label>Chức vụ:</label>
+        <input type="text" name="ChucVu" class="form-control" required />
+        <label>Địa chỉ:</label>
+        <input type="text" name="Dcnv" class="form-control" required />
+        <label>Số điện thoại:</label>
+        <input type="text" name="Sdtnv" class="form-control" required />
+    }
+    else if (table == "HoaDons")
+    {
+        <label>Mã hóa đơn:</label>
+        <input type="text" name="MaHd" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Ngày lập:</label>
+        <input type="date" name="NgayLap" class="form-control" required />
+        <label>Ngày giao dịch:</label>
+        <input type="date" name="NgayGd" class="form-control" required />
+        <label>Hình thức:</label>
+        <input type="text" name="HinhThuc" class="form-control" required />
+        <label>Mã khách hàng:</label>
+        <select name="MaKh" class="form-control" required>
+            @foreach (var kh in ViewBag.KhachHangs)
+            {
+                <option value="@kh.MaKh">@kh.TenKh (@kh.MaKh)</option>
+            }
+        </select>
+        <label>Mã nhân viên:</label>
+        <select name="MaNv" class="form-control" required>
+            @foreach (var nv in ViewBag.NhanViens)
+            {
+                <option value="@nv.MaNv">@nv.TenNv (@nv.MaNv)</option>
+            }
+        </select>
+    }
+    else if (table == "TaiKhoans")
+    {
+        <label>Mã tài khoản:</label>
+        <input type="text" name="MaTk" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Mã loại tài khoản:</label>
+        <select name="MaLtk" class="form-control" required>
+            @foreach (var loai in ViewBag.LoaiTks)
+            {
+                <option value="@loai.MaLtk">@loai.TenLtk (@loai.MaLtk)</option>
+            }
+        </select>
+        <label>Tên đăng nhập:</label>
+        <input type="text" name="TenDn" class="form-control" required />
+        <label>Mật khẩu:</label>
+        <input type="password" name="Mk" class="form-control" required />
+    }
+    else if (table == "KhachHangs")
+    {
+        <label>Mã khách hàng:</label>
+         <input type="text" name="MaKh" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên khách hàng:</label>
+        <input type="text" name="TenKh" class="form-control" required />
+        <label>Giới tính:</label>
+        <select name="GioiTinh" class="form-control">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+        <label>Địa chỉ:</label>
+        <input type="text" name="Dckh" class="form-control" required />
+        <label>Số điện thoại:</label>
+        <input type="text" name="Sdtkh" class="form-control" required />
+        <label>Mã loại khách hàng:</label>
+        <select name="MaLkh" class="form-control" required>
+            @foreach (var loai in ViewBag.LoaiKhs)
+            {
+                <option value="@loai.MaLkh">@loai.TenLkh (@loai.MaLkh)</option>
+            }
+        </select>
+    }
+    else if (table == "PhieuNhs")
+    {
+        <label>Mã phiếu nhập hàng:</label>
+        <input type="text" name="MaPnh" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Ngày nhập hàng:</label>
+        <input type="date" name="NgayNh" class="form-control" required />
+        <label>Mã đơn đặt hàng:</label>
+        <select name="MaDdh" class="form-control" required>
+            @foreach (var ddh in ViewBag.DonDhs)
+            {
+                <option value="@ddh.MaDdh">@ddh.MaDdh</option>
+            }
+        </select>
+        <label>Mã nhân viên:</label>
+        <select name="MaNv" class="form-control" required>
+            @foreach (var nv in ViewBag.NhanViens)
+            {
+                <option value="@nv.MaNv">@nv.TenNv (@nv.MaNv)</option>
+            }
+        </select>
+    }
+    else if (table == "Nccs")
+    {
+        <label>Mã nhà cung cấp:</label>
+        <input type="text" name="MaNcc" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên nhà cung cấp:</label>
+        <input type="text" name="TenNcc" class="form-control" required />
+        <label>Địa chỉ:</label>
+        <input type="text" name="Dcncc" class="form-control" required />
+        <label>Số điện thoại:</label>
+        <input type="text" name="Sdtncc" class="form-control" required />
+    }
+    else if (table == "NguyenLieus")
+    {
+        <label>Mã nguyên liệu:</label>
+        <input type="text" name="MaNl" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên nguyên liệu:</label>
+        <input type="text" name="TenNl" class="form-control" required />
+    }
+    else if (table == "Cthds")
+    {
+        <label>Mã bánh:</label>
+        <select name="MaBanh" class="form-control" required>
+            @foreach (var banh in ViewBag.Banhs)
+            {
+                <option value="@banh.MaBanh">@banh.TenBanh (@banh.MaBanh)</option>
+            }
+        </select>
+        <label>Mã hóa đơn:</label>
+        <select name="MaHd" class="form-control" required>
+            @foreach (var hd in ViewBag.HoaDons)
+            {
+                <option value="@hd.MaHd">@hd.MaHd - @hd.NgayLap.ToShortDateString()</option>
+            }
+        </select>
+        <label>Đơn giá bán:</label>
+        <input type="number" name="Dgban" class="form-control" required />
+        <label>Số lượng:</label>
+        <input type="number" name="Sl" class="form-control" required />
+    }
+    else if (table == "Ctpghs")
+    {
+        <label>Mã bánh:</label>
+        <select name="MaBanh" class="form-control" required>
+            @foreach (var banh in ViewBag.Banhs)
+            {
+                <option value="@banh.MaBanh">@banh.TenBanh (@banh.MaBanh)</option>
+            }
+        </select>
+        <label>Mã phiếu giao hàng:</label>
+        <select name="MaPgh" class="form-control" required>
+            <option value="">-- Chọn phiếu giao hàng --</option>
+            @foreach (var pgh in ViewBag.PhieuGhs)
+            {
+                <option value="@pgh.MaPgh">Phiếu @pgh.MaPgh - @pgh.NgayGh.ToShortDateString()</option>
+            }
+        </select>
+        <label>Số lượng:</label>
+        <input type="number" name="Sl" class="form-control" required />
+    }
+    else if (table == "Ctdnhs")
+    {
+        <label>Mã nguyên liệu:</label>
+        <select name="MaNl" class="form-control" required>
+            <option value="">-- Chọn nguyên liệu --</option>
+            @foreach (var nl in ViewBag.NguyenLieus)
+            {
+                <option value="@nl.MaNl">@nl.TenNl (@nl.MaNl)</option>
+            }
+        </select>
+
+        <label>Mã đơn đặt hàng:</label>
+        <select name="MaDdh" class="form-control" required>
+            <option value="">-- Chọn đơn đặt hàng --</option>
+            @foreach (var ddh in ViewBag.DonDhs)
+            {
+                <option value="@ddh.MaDdh">@ddh.MaDdh - @ddh.NgayDh.ToShortDateString()</option>
+            }
+        </select>
+
+        <label>Mã phiếu nhập hàng:</label>
+        <select name="MaPnh" class="form-control" required>
+            <option value="">-- Chọn phiếu nhập hàng --</option>
+            @foreach (var pnh in ViewBag.PhieuNhs)
+            {
+                <option value="@pnh.MaPnh">@pnh.MaPnh - @pnh.NgayNh.ToShortDateString()</option>
+            }
+        </select>
+
+        <label>Số lượng:</label>
+        <input type="number" name="Sl" class="form-control" required />
+    }
+
+    else if (table == "DonDhs")
+    {
+        <label>Mã đơn đặt hàng:</label>
+        <input type="text" name="MaDdh" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Ngày đặt hàng:</label>
+        <input type="date" name="NgayDh" class="form-control" required />
+        <label>Mã khách hàng:</label>
+        <select name="MaKh" class="form-control" required>
+            @foreach (var kh in ViewBag.KhachHangs)
+            {
+                <option value="@kh.MaKh">@kh.TenKh (@kh.MaKh)</option>
+            }
+        </select>
+        <label>Mã nhân viên:</label>
+        <select name="MaNv" class="form-control" required>
+            @foreach (var nv in ViewBag.NhanViens)
+            {
+                <option value="@nv.MaNv">@nv.TenNv (@nv.MaNv)</option>
+            }
+        </select>
+    }
+    else if (table == "LoaiBanhs")
+    {
+        <label>Mã loại bánh:</label>
+        <input type="text" name="MaLb" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên loại bánh:</label>
+        <input type="text" name="TenLb" class="form-control" required />
+    }
+    else if (table == "LoaiKhs")
+    {
+        <label>Mã loại khách hàng:</label>
+        <input type="text" name="MaLkh" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên loại khách hàng:</label>
+        <input type="text" name="TenLkh" class="form-control" required />
+    }
+    else if (table == "LoaiTks")
+    {
+        <label>Mã loại tài khoản:</label>
+        <input type="text" name="MaLtk" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Tên loại tài khoản:</label>
+        <input type="text" name="TenLtk" class="form-control" required />
+    }
+    else if (table == "PhieuGhs")
+    {
+        <label>Mã phiếu giao hàng:</label>
+        <input type="text" name="MaPgh" class="form-control" required
+               value="@ViewData["GeneratedId"]" readonly />
+        <label>Ngày giao hàng:</label>
+        <input type="date" name="NgayGh" class="form-control" required />
+
+        <label>Mã hóa đơn:</label>
+        <select name="MaHd" class="form-control" required>
+            <option value="">-- Chọn hóa đơn --</option>
+            @foreach (var hd in ViewBag.HoaDons)
+            {
+                <option value="@hd.MaHd">@hd.MaHd - @hd.NgayLap.ToShortDateString()</option>
+            }
+        </select>
+
+        <label>Mã nhân viên:</label>
+        <select name="MaNv" class="form-control" required>
+            <option value="">-- Chọn nhân viên --</option>
+            @foreach (var nv in ViewBag.NhanViens)
+            {
+                <option value="@nv.MaNv">@nv.TenNv (@nv.MaNv)</option>
+            }
+        </select>
+    }
+
+
+    else
+    {
+        <p>Bảng không được hỗ trợ hoặc chưa được định nghĩa form.</p>
+    }
+    <button type="button" class="btn btn-primary mt-3" onclick="history.back()">Quay về</button>
+    <button type="submit" class="btn btn-primary mt-3">Thêm</button>
+    
+    
+</form>
+@* <script>
+function calculateTotal() {
+    var roomSelect = document.getElementById("RoomId");
+    var checkInDate = document.getElementById("CheckInDate").value;
+    var checkOutDate = document.getElementById("CheckOutDate").value;
+    var BookingDate = document.getElementById("BookingDate").value;
+    var totalPriceInput = document.getElementById("TotalPrice");
+
+    var selectedRoom = roomSelect.options[roomSelect.selectedIndex];
+    var pricePerNight = parseFloat(selectedRoom.getAttribute("data-price"));
+
+    if (checkInDate && checkOutDate && pricePerNight && BookingDate) 
+    {
+        var inDate = new Date(checkInDate);
+        var outDate = new Date(checkOutDate);
+        var setday = new Date(BookingDate);
+        var diffDays = (outDate - inDate) / (1000 * 60 * 60 * 24);
+        var diffDays2 = (inDate - setday) / (1000 * 60 * 60 * 24);
+        if (diffDays2 < 0) {
+            alert("Ngày đặt phải trước hoặc trùng ngày nhận phòng!");
+            totalPriceInput.value = "";
+            return;
+        }
+        if (diffDays < 0) {
+            alert("Ngày trả phòng phải sau ngày nhận phòng!");
+            totalPriceInput.value = "";
+            return;
+        }
+        var total = diffDays * pricePerNight;
+        totalPriceInput.value = total;
+    }
+    else 
+    {
+        totalPriceInput.value = "";
+    }
+}
+</script> *@

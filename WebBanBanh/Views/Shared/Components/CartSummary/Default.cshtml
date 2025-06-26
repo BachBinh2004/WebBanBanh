@@ -1,0 +1,51 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@await Component.InvokeAsync("CartSummary")
+<style>
+    .cart-wrapper .cart-icon {
+        margin-right: 0px;
+        border-radius: unset;
+    }
+
+    .cart-wrapper {
+        position: relative;
+        display: flex;
+        width: 40px;
+        height: 40px;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+    }
+
+    .jbrHBQ {
+        color: rgb(255, 255, 255);
+        background: rgb(255, 66, 79);
+        height: 16px;
+        right: 0px;
+        top: -4px;
+        border-radius: 8px;
+        display: inline-block;
+        text-align: center;
+        font-weight: 700;
+        font-size: 10px;
+        line-height: 150%;
+        position: absolute;
+        padding: 0.5px 4px;
+    }
+</style>
+<div class="cart-wrapper">
+    <a href="@Url.Action("Index", "ShoppingCart")">
+        <img class="cart-icon"
+             src="~/images/8ca7e2cc5ede8c09e34d1beb50267f4f.png"
+             alt="No Image"
+             width="40px" height="40px">
+    </a>
+    @if (@ViewBag.TotalQuantity > 0)
+    {
+        <span class="jbrHBQ">@ViewBag.TotalQuantity</span>
+    }
+</div>

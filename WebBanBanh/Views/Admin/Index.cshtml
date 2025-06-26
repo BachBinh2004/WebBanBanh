@@ -1,0 +1,110 @@
+﻿@model IEnumerable<WebBanBanh.Models.Banh>
+
+@{
+    ViewData["Title"] = "Danh sách bánh";
+}
+
+<h1 class="text-center my-4"><u>Danh sách bánh</u></h1>
+
+<!-- Thanh tìm kiếm & Bộ lọc -->
+<form method="get" class="d-flex justify-content-between mb-3">
+    <!-- Ô tìm kiếm -->
+    <input type="text" name="searchString" class="form-control w-25" placeholder="🔍 Tìm bánh theo tên..."
+           value="@ViewData["CurrentFilter"]" />
+    <a asp-action="Create" class="btn btn-success">➕ Thêm Bánh Mới</a>
+    <div class="d-flex gap-2">
+        <!-- Dropdown sắp xếp -->
+        <select name="sortOrder" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="">-- Sắp xếp --</option>
+            <option value="price_asc" selected="@(ViewData["SortOrder"]?.ToString() == "price_asc")"> Giá (Thấp → Cao)</option>
+            <option value="price_desc" selected="@(ViewData["SortOrder"]?.ToString() == "price_desc")"> Giá (Cao → Thấp)</option>
+            <option value="name_asc" selected="@(ViewData["SortOrder"]?.ToString() == "name_asc")"> Tên (A → Z)</option>
+            <option value="name_desc" selected="@(ViewData["SortOrder"]?.ToString() == "name_desc")"> Tên (Z → A)</option>
+        </select>
+
+        <!-- Dropdown lọc theo loại bánh -->
+        <select name="categoryFilter" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="">-- Tất cả các loại --</option>
+            @foreach (var loai in (List<string>)ViewData["LoaiBanhList"])
+            {
+                <option value="@loai" selected="@(ViewData["CategoryFilter"]?.ToString() == loai)">@loai</option>
+            }
+        </select>
+    </div>
+</form>
+
+<!-- Bảng danh sách bánh -->
+<table class="table table-bordered table-striped text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Tên Bánh</th>
+            <th>Loại bánh</th>
+            <th>Mô tả</th>
+            <th>Hạn sử dụng (Ngày)</th>
+            <th>Hình ảnh bánh</th>
+            <th>Giá sản phẩm</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(b => b.IsHidden)) 
+        {
+            <tr class="@(item.IsHidden ? "table-secondary" : "")"> 
+                <td>@Html.DisplayFor(modelItem => item.TenBanh)</td>
+                <td>@Html.DisplayFor(modelItem => item.MaLbNavigation.TenLb)</td>
+                <td>@Html.DisplayFor(modelItem => item.Mota)</td>
+                <td>
+                    @{
+                        TimeSpan hsdValue = item.Hsd - item.Nsx;
+                    }
+                    @(hsdValue.Days) ngày
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Hinhanh))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.MaBanh">
+                            <img src="@item.Hinhanh" class="img-thumbnail hover-img" alt="@item.TenBanh"
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Chưa có ảnh</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Gia)</td>
+                <td>
+                    @if (item.IsHidden)
+                    {
+                        <span class="badge bg-danger">Đã ẩn</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Đang hiển thị</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaBanh" class="btn btn-warning btn-sm">✏️ Sửa</a>
+
+                    <form asp-action="Hide" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@item.MaBanh" />
+                        <button type="submit" class="btn @(item.IsHidden ? "btn-success" : "btn-danger") btn-sm">
+                            @(item.IsHidden ? "🚀 Lên sản phẩm" : "🗑️ Hạ sản phẩm")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .hover-img {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .hover-img:hover {
+        transform: scale(1.1);
+    }
+</style>

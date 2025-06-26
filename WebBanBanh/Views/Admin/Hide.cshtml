@@ -1,0 +1,34 @@
+﻿@model WebBanBanh.Models.Banh
+
+@{
+    ViewData["Title"] = Model.IsHidden ? "Lên sản phẩm" : "Hạ sản phẩm";
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-body text-center">
+        <h5 class="card-title">@Model.TenBanh</h5>
+        @if (!string.IsNullOrEmpty(Model.Hinhanh))
+        {
+            <img src="@Model.Hinhanh" class="img-thumbnail my-3" alt="@Model.TenBanh" style="width: 250px; height: 250px; object-fit: cover;">
+        }
+        <p class="card-text"><strong>Giá:</strong> @Model.Gia VNĐ</p>
+        <p class="card-text">
+            <strong>Trạng thái:</strong>
+            <span class="badge @(Model.IsHidden ? "bg-danger" : "bg-success")">
+                @(Model.IsHidden ? "Đã ẩn" : "Đang hiển thị")
+            </span>
+        </p>
+
+        <form asp-action="HideConfirmed" method="post">
+            <input type="hidden" name="id" value="@Model.MaBanh" />
+            <p>Bạn có chắc chắn muốn @(Model.IsHidden ? "Lên sản phẩm" : "Hạ sản phẩm") không?</p>
+            <button type="submit" class="btn @(Model.IsHidden ? "btn-success" : "btn-danger")">
+                @(Model.IsHidden ? "🚀 Lên sản phẩm" : "🗑️ Hạ sản phẩm")
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">❌ Hủy</a>
+        </form>
+    </div>
+</div>

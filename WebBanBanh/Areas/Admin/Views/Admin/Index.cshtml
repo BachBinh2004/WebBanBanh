@@ -1,0 +1,297 @@
+﻿@model IEnumerable<object>
+@{
+    ViewData["Title"] = "Danh sách dữ liệu";
+    var tableNames = ViewData["TableNames"] as Dictionary<string, string>;
+    var selectedTable = ViewData["SelectedTable"] as string;
+    var search = Context.Request.Query["search"].ToString()?.ToLower();
+    var sortColumn = Context.Request.Query["sort"].ToString();
+    var sortAsc = Context.Request.Query["asc"] == "true";
+    var filterColumn = Context.Request.Query["filterColumn"].ToString();
+    var filterValue = Context.Request.Query["filterValue"].ToString();
+    int page = int.TryParse(Context.Request.Query["page"], out var p) ? p : 1;
+    int pageSize = 10;
+}
+<style>
+    :root {
+        --primary-color: #003366;
+        --secondary-color: #f1f5f9;
+        --hover-color: #0055aa;
+    }
+
+    h1, h2, h3, h4, h5 {
+        color: var(--primary-color);
+    }
+
+    .btn-primary, .btn-warning, .btn-danger, .btn-outline-secondary {
+        border-radius: 6px;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+            border-color: var(--hover-color);
+        }
+
+    .table th {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .form-select:focus, .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.15rem rgba(0, 51, 102, 0.25);
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .pagination .page-link {
+        color: var(--primary-color);
+    }
+
+        .pagination .page-link:hover {
+            background-color: var(--hover-color);
+            color: white;
+        }
+
+    table.table {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+</style>
+
+<h1 class="d-flex justify-content-between align-items-center">
+  Danh sách dữ liệu
+  <a href="/admin/admin/dashboard" class="btn btn-primary">
+    <i class="bi bi-speedometer2 me-1"></i> Về Dashboard
+  </a>
+</h1>
+
+<form method="get" class="row g-3 align-items-end mb-3">
+    <div class="col-auto">
+        <label for="tableSelect" class="form-label">Chọn bảng:</label>
+        <select id="tableSelect" name="selectedTable" onchange="this.form.submit()" class="form-select">
+            @foreach (var table in tableNames)
+            {
+                <option value="@table.Key" selected="@(table.Key == selectedTable ? "selected" : null)">@table.Value</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <label for="search" class="form-label">Tìm kiếm:</label>
+        <input type="text" id="search" name="search" placeholder="Nhập từ khóa..." class="form-control" value="@search" />
+    </div>
+    <div class="col-auto">
+        <label for="filterColumn" class="form-label">Thuộc tính:</label>
+        <select id="filterColumn" name="filterColumn" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Chọn thuộc tính --</option>
+            @if (Model.Any())
+            {
+                var firstItem = Model.First();
+                foreach (var prop in firstItem.GetType().GetProperties())
+                {
+                    <option value="@prop.Name" selected="@(filterColumn == prop.Name ? "selected" : null)">@prop.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <label for="filterValue" class="form-label">Giá trị:</label>
+        <select id="filterValue" name="filterValue" class="form-select">
+            <option value="">-- Tất cả --</option>
+            @if (!string.IsNullOrEmpty(filterColumn) && Model.Any())
+            {
+                var values = Model.Select(x => x.GetType().GetProperty(filterColumn)?.GetValue(x)?.ToString())
+                .Distinct()
+                .Where(x => !string.IsNullOrEmpty(x))
+                .OrderBy(x => x);
+                foreach (var val in values)
+                {
+                    <option value="@val" selected="@(filterValue == val ? "selected" : null)">@val</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <label for="sort" class="form-label">Sắp xếp theo:</label>
+        <select id="sort" name="sort" class="form-select">
+            <option value="">Mặc định (Id)</option>
+            @if (Model.Any())
+            {
+                var firstItem = Model.First();
+                foreach (var prop in firstItem.GetType().GetProperties())
+                {
+                    <option value="@prop.Name" selected="@(sortColumn == prop.Name ? "selected" : null)">@prop.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <label class="form-label">Thứ tự:</label>
+        <select name="asc" class="form-select">
+            <option value="true" selected="@(sortAsc ? "selected" : null)">Tăng dần</option>
+            <option value="false" selected="@(!sortAsc ? "selected" : null)">Giảm dần</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Lọc & Sắp xếp</button>
+    </div>
+</form>
+
+<div class="mb-3">
+    <button class="btn btn-primary me-2" onclick="handleAdd()">Thêm</button>
+    <button class="btn btn-warning me-2" onclick="handleEdit()">Sửa</button>
+    <button class="btn btn-danger" onclick="handleDelete()">Xóa</button>
+</div>
+
+@{
+    var allCount = Model.Count();
+
+    var filtered = Model
+        .Where(item => string.IsNullOrEmpty(search) || item.GetType().GetProperties().Any(p => (p.GetValue(item)?.ToString()?.ToLower() ?? "").Contains(search)));
+    
+    if (!string.IsNullOrEmpty(filterColumn) && !string.IsNullOrEmpty(filterValue))
+    {
+        filtered = filtered.Where(item => item.GetType().GetProperty(filterColumn)?.GetValue(item)?.ToString() == filterValue);
+    }
+
+    var sortProp = !string.IsNullOrEmpty(sortColumn) ? sortColumn : "Id";
+    filtered = sortAsc
+        ? filtered.OrderBy(item => item.GetType().GetProperty(sortProp)?.GetValue(item))
+        : filtered.OrderByDescending(item => item.GetType().GetProperty(sortProp)?.GetValue(item));
+
+    var paged = filtered.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+    var totalItems = filtered.Count();
+    <p class="mt-3 fw-bold">
+        Tổng số dòng: <span class="text-success">@totalItems</span> / <span class="text-secondary">@allCount</span>
+    </p>
+
+    var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+}
+
+<table class="table table-bordered table-striped mt-3">
+    <thead>
+        <tr>
+            @if (Model.Any())
+            {
+                var firstItem = Model.First();
+                foreach (var prop in firstItem.GetType().GetProperties())
+                {
+                    <th>@prop.Name</th>
+                }
+                <th>Chọn</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in paged)
+        {
+            var idProp = item.GetType().GetProperties().FirstOrDefault();
+            var id = idProp?.GetValue(item);
+            <tr>
+                @foreach (var prop in item.GetType().GetProperties())
+                {
+                    var value = prop.GetValue(item);
+                    if (prop.Name.ToLower().Contains("hinh") || prop.Name.ToLower().Contains("image"))
+                    {
+                        <td>
+                            <img src="@value" style="max-height: 80px;" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td>@value</td>
+                    }
+                }
+                <td>
+                    <input type="checkbox" name="selectedRow" value="@id" onclick="selectRow(this)" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination">
+        @{
+            var queryParams = new Dictionary<string, string>
+            {
+                { "selectedTable", selectedTable },
+                { "search", Context.Request.Query["search"] },
+                { "filterColumn", Context.Request.Query["filterColumn"] },
+                { "filterValue", Context.Request.Query["filterValue"] },
+                { "sort", Context.Request.Query["sort"] },
+                { "asc", Context.Request.Query["asc"] }
+            };
+        }
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            var queryString = string.Join("&", queryParams.Select(kv => $"{kv.Key}={kv.Value}")) + $"&page={i}";
+
+            <li class="page-item @(i == page ? "active" : "")">
+                <a class="page-link" href="@($"/Admin/Admin?{queryString}")">
+                    @i
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+
+<script>
+    let selectedId = null;
+    function selectRow(checkbox) {
+        selectedId = checkbox.value;
+    }
+    function handleAdd() {
+        var table = document.getElementById("tableSelect").value;
+
+        // Chuyển hướng đến trang tạo với bảng tương ứng
+        window.location.href = "/Admin/Admin/Create/" + table;
+    }
+
+
+    function handleEdit() {
+        const table = document.getElementById("tableSelect").value;
+        if (!selectedId) {
+            alert("Vui lòng chọn một dòng để sửa!");
+            return;
+        }
+        window.location.href = "/Admin/Admin/Edit/" + table + "/" + selectedId;
+    }
+
+    function handleDelete() {
+        const table = document.getElementById("tableSelect").value;
+        if (!selectedId) {
+            alert("Vui lòng chọn một dòng để xóa!");
+            return;
+        }
+        if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+            window.location.href = "/Admin/Admin/Delete/" + table + "/" + selectedId;
+        }
+    }
+    // Auto chọn bảng mặc định nếu chưa có
+    document.addEventListener("DOMContentLoaded", function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has("selectedTable")) {
+            var defaultTable = "Banhs";
+            window.location.href = window.location.pathname + "?selectedTable=" + defaultTable;
+        }
+    });
+</script>
+

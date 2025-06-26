@@ -1,0 +1,242 @@
+﻿@model IEnumerable<object>
+@{
+    ViewData["Title"] = "Danh sách dữ liệu";
+    var tableNames = ViewData["TableNames"] as Dictionary<string, string>;
+    var selectedTable = ViewData["SelectedTable"] as string;
+}
+
+<h1>Danh sách dữ liệu</h1>
+<!-- Chọn bảng + Nút hành động -->
+<div class="d-flex align-items-center mb-3">
+    <!-- Dropdown chọn bảng -->
+    <form method="get" class="d-flex">
+        <label for="tableSelect" class="me-2">Chọn bảng:</label>
+        <select id="tableSelect" name="selectedTable" onchange="this.form.submit()" class="form-select me-3">
+            @foreach (var table in tableNames)
+            {
+                <option value="@table.Key" selected="@(table.Key == (selectedTable ?? "Banhs") ? "selected" : null)">
+                    @table.Value
+                </option>
+            }
+        </select>
+    </form>
+
+    <!-- Nút Thêm, Sửa, Xóa -->
+    <button class="btn btn-primary me-2" onclick="handleAdd()">Thêm</button>
+    <button class="btn btn-warning me-2" onclick="handleEdit()">Sửa</button>
+    <button class="btn btn-danger" onclick="handleDelete()">Xóa</button>
+</div>
+<!-- Hiển thị bảng -->
+<table class="table mt-3">
+    <thead>
+        <tr>
+            @if (Model.Any())
+            {
+                var firstItem = Model.First();
+
+                <!-- Kiểm tra nếu bảng được chọn là "Banhs", hiển thị các cột cụ thể -->
+                @if (selectedTable == "Banhs")
+                {
+                    <th>Mã bánh</th>
+                    <th>Tên bánh</th>
+                    <th>NSX</th>
+                    <th>HSD</th>
+                    <th>Mô tả</th>
+                    <th>Hình ảnh</th>
+                    <th>Loại bánh</th>
+                    <th>Giá</th>
+                }
+                @if (selectedTable == "Ctddhs")
+                {
+                    <th>Mã nguyên liệu</th>
+                    <th>Mã đơn đặt hàng</th>
+                    <th>Đơn giá mua</th>
+                    <th>Số lượng</th>
+                }
+                @if (selectedTable == "Ctdnhs")
+                {
+                    <th>Mã nguyên liệu</th>
+                    <th>Mã đơn đặt hàng</th>
+                    <th>Mã phiếu nhập hàng</th>
+                    <th>Số lượng</th>
+                }
+                @if (selectedTable == "Cthds")
+                {
+                    <th>Mã bánh</th>
+                    <th>Mã hóa đơn</th>
+                    <th>Đơn giá bán</th>
+                    <th>Số lượng</th>
+                }
+                @if (selectedTable == "Ctpghs")
+                {
+                    <th>Mã bánh</th>
+                    <th>Mã phiếu giao hàng</th>
+                    <th>Số lượng</th>
+                }
+                @if (selectedTable == "Nccs")
+                {
+                    <th>Mã nhà cung cấp</th>
+                    <th>Tên nhà cung cấp</th>
+                    <th>địa chỉ nhà cung cấp</th>
+                    <th>số điện thoại nhà cung cấp</th>
+                }
+                @if (selectedTable == "HoaDons")
+                {
+                    <th>Mã hóa đơn</th>
+                    <th>Ngày lập</th>
+                    <th>Ngày giao dịch</th>
+                    <th>Hình thức</th>
+                    <th>Mã khách hàng</th>
+                    <th>Mã nhân viên</th>
+                }
+                @if (selectedTable == "KhachHangs")
+                {
+                    <th>Mã khách hàng</th>
+					<th>Tên khách hàng</th>
+                    <th>Giới tính</th>
+                    <th>Địa chỉ khách hàng</th>
+                    <th>Số điện thoại khách hàng</th>
+                    <th>Mã loại khách hàng</th>
+                }
+                @if (selectedTable == "NhanViens")
+                {
+                    <th>Mã nhân viên</th>
+                    <th>Tên nhân viên</th>
+                    <th>Giới tính</th>
+					<th>Ngày sinh</th>
+                    <th>Chức vụ</th>
+					<th>Địa chỉ nhân viên</th>
+                    <th>Số điện thoại nhân viêng</th>
+                }
+                @if (selectedTable == "LoaiBanhs")
+                {
+                    <th>Mã loại bánh</th>
+                    <th>Tên loại bánh</th>
+                }
+                @if (selectedTable == "LoaiKhs")
+                {
+                    <th>Mã loại khách hàng</th>
+                    <th>Tên loại khách hàng</th>
+				}
+                @if (selectedTable == "LoaiTks")
+                {
+                    <th>Mã loại tài khoản</th>
+                    <th>Tên loại tài khoản</th>
+                }
+                @if (selectedTable == "NguyenLieus")
+                {
+                    <th>Mã loại nguyên liệu</th>
+                    <th>Tên loại nguyên liệu</th>
+                }
+                @if (selectedTable == "PhieuGhs")
+                {
+                    <th>Mã phiếu giao hàng</th>
+                    <th>Ngày giao hàng</th>
+                    <th>Mã hóa đơn</th>
+                    <th>Mã nhân viên</th>
+                }
+                @if (selectedTable == "PhieuNhs")
+                {
+                    <th>Mã phiếu nhập hàng</th>
+                    <th>Ngày nhập hàng</th>
+                    <th>Mã đơn đặt hàng</th>
+                    <th>Mã nhân viên</th>
+                }
+                @if (selectedTable == "TaiKhoans")
+                {
+                    <th>Mã loại tài khoản</th>
+                    <th>Tên loại loại tài khoản</th>
+                    <th>Mật khẩu</th>
+                    <th>Tên đăng nhập</th>
+                }
+                @* else
+                {
+                    <!-- tôi đã lười-->
+                    foreach (var prop in firstItem.GetType().GetProperties())
+                    {
+                        <th>@prop.Name</th>
+                    }
+                } *@
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var id = item.GetType().GetProperties().FirstOrDefault()?.GetValue(item); // Lấy ID dòng
+            <tr>
+                @if (selectedTable == "Banhs")
+                {
+                    <td>@item.GetType().GetProperty("MaBanh")?.GetValue(item)</td>
+                    <td>@item.GetType().GetProperty("TenBanh")?.GetValue(item)</td>
+                    <td>@item.GetType().GetProperty("Nsx")?.GetValue(item)</td>
+                    <td>@item.GetType().GetProperty("Hsd")?.GetValue(item)</td>
+                    <td>@item.GetType().GetProperty("Mota")?.GetValue(item)</td>
+                    <td>
+                        <img src="@item.GetType().GetProperty("Hinhanh")?.GetValue(item)" alt="Hình ảnh" style="width: 100px; height: 100px;" />
+                    </td>
+                    <td>@item.GetType().GetProperty("TenLb")?.GetValue(item)</td>
+                    <td>@item.GetType().GetProperty("Gia")?.GetValue(item)</td>
+                    <td>
+                        <input type="checkbox" name="selectedRow" value="@id" onclick="selectRow(this)">
+
+                    </td>
+                }
+                else
+                {
+                    foreach (var prop in item.GetType().GetProperties())
+                    {
+                        <td>@prop.GetValue(item)</td>
+
+                    }
+                    <td>
+                        <input type="checkbox" name="selectedRow" value="@id" onclick="selectRow(this)">
+
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Script xử lý sự kiện -->
+<script>
+    let selectedId = null;
+    document.addEventListener("DOMContentLoaded", function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has("selectedTable")) {
+            var defaultTable = "Banhs"; // Giá trị mặc định
+            window.location.href = window.location.pathname + "?selectedTable=" + defaultTable;
+        }
+    });
+    function selectRow(checkbox) {
+        selectedId = checkbox.value;
+    }
+    
+    function handleAdd() {
+        var table = document.getElementById("tableSelect").value;
+
+        // Chuyển hướng đến trang tạo với bảng tương ứng
+        window.location.href = "/Manager/Create/" + table;
+    }
+
+    function handleEdit() {
+        let checkboxes = document.querySelectorAll('input[name="selectedRow"]:checked');
+        if (checkboxes.length > 1) {
+            alert("Chỉ được chọn một dòng để sửa hoặc xóa!");
+            checkbox.checked = false;
+        }
+        var table = document.getElementById("tableSelect").value;
+        window.location.href = "/Manager/Edit/" + table + "/" + selectedId;
+    }
+
+    function handleDelete() {
+        if (!selectedId) {
+            alert("Vui lòng chọn một hàng để xóa!");
+            return;
+        }
+        if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+            var table = document.getElementById("tableSelect").value;
+            window.location.href = "/Manager/Delete/" + table + "/" + selectedId;
+        }
+    }
+</script>

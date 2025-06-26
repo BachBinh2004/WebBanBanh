@@ -1,0 +1,353 @@
+﻿@model IEnumerable<WebBanBanh.Models.Banh>
+
+
+<head>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<title>Tiệm bánh SYK</title>
+
+</head>
+
+@{
+	ViewData["Title"] = "Danh sách bánh";
+	var banhLB2 = Model.Where(b => b.MaLb == "LB2").ToList(); // Lọc bánh có theo Mã loại bánh (MaLb)
+	var banhLB1 = Model.Where(b => b.MaLb == "LB1").ToList();
+	var banhLB3 = Model.Where(b => b.MaLb == "LB3").ToList();
+	var banhLB4 = Model.Where(b => b.MaLb == "LB4").ToList();
+	var banhLB5 = Model.Where(b => b.MaLb == "LB5").ToList();
+}
+
+
+
+<h1 class="text-center mt-5 mb-5 text-dark fw-bold fw-bolder text-decoration-underline"> Bánh Ngọt </h1>
+
+@if (banhLB2.Any())
+{
+	<div id="carouselLB2" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="1000">
+		<div class="carousel-inner rounded shadow-lg">
+			@{
+				int index = 0;
+			}
+			@foreach (var item in banhLB2)
+			{
+				<div class="carousel-item @(index == 0 ? "active" : "")">
+					<img src="@item.Hinhanh" class="d-block w-100 rounded carousel-img" alt="@item.TenBanh">
+					<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+						<h4 class="fw-bold text-white">@item.TenBanh</h4>
+					</div>
+				</div>
+				index++;
+			}
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselLB2" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselLB2" data-bs-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</button>
+	</div>
+}
+<div class="container">
+	<div class="row row-cols-1 row-cols-md-3 g-4">
+		@foreach (var item in banhLB2.Take(3))
+		{
+			<div class="col">
+				<div class="card h-100 shadow-lg border-2 border-pink">
+					<a asp-action="Details" asp-route-id="@item.MaBanh">
+						<img src="@item.Hinhanh" class="card-img-top rounded-top hover-img" alt="@item.TenBanh" style="height: 250px; object-fit: cover;">
+					</a>
+					<div class="card-body text-center">
+						<h5 class="card-title text-pink fw-bold">@item.TenBanh</h5>
+						<p class="card-text text-danger fw-bold fs-5">@item.Gia.ToString() VNĐ</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+
+	<!-- Nút "Xem thêm" chuyển đến trang collections/banhLB2 -->
+	<div class="text-center mt-4">
+		<a href="/collections/Index?LoaiBanh=Bánh Ngọt" class="btn btn-outline-dark fw-bold px-5 py-2">
+			Xem thêm
+		</a>
+	</div>
+
+</div>
+
+
+@* Bánh mì *@
+<h1 class="text-center mt-5 mb-5 text-dark fw-bold fw-bolder text-decoration-underline">
+	Bánh mì
+</h1>
+
+
+@if (banhLB2.Any())
+{
+	<div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="1000">
+		@* tự trôi qua ảnh tiếp theo mỗi 2s (1000ms) *@
+		<div class="carousel-inner rounded shadow-lg">
+			@{
+				int index = 0;
+			}
+			@foreach (var item in banhLB1)
+			{
+				<div class="carousel-item @(index == 0 ? "active" : "")">
+					<img src="@item.Hinhanh" class="d-block w-100 rounded" alt="@item.TenBanh" style="height: 450px; object-fit: cover;">
+					<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+						<h4 class="fw-bold text-white">@item.TenBanh</h4>
+					</div>
+				</div>
+				index++;
+			}
+		</div>
+
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselLB2" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselLB2" data-bs-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</button>
+	</div>
+}
+
+<!-- Hiển thị danh sách bánh dạng card -->
+<div class="container">
+	<div class="row row-cols-1 row-cols-md-3 g-4">
+		@foreach (var item in banhLB1.Take(3))
+		{
+			<div class="col">
+				<div class="card h-100 shadow-lg border-2 border-pink">
+					<a asp-action="Details" asp-route-id="@item.MaBanh">
+						<img src="@item.Hinhanh" class="card-img-top rounded-top hover-img" alt="@item.TenBanh" style="height: 250px; object-fit: cover;">
+					</a>
+					<div class="card-body text-center">
+						<h5 class="card-title text-pink fw-bold">@item.TenBanh</h5>
+						<p class="card-text text-danger fw-bold fs-5">@item.Gia.ToString() VNĐ</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	<!-- Nút "Xem thêm" chuyển đến trang collections/banhLB2 -->
+	<div class="text-center mt-4">
+		<a href="/collections/Index?LoaiBanh=Bánh Mì" class="btn btn-outline-dark fw-bold px-5 py-2">
+			Xem thêm
+		</a>
+	</div>
+
+</div>
+
+@* bánh kem *@
+<h1 class="text-center mt-5 mb-5 text-dark fw-bold fw-bolder text-decoration-underline"> Bánh Kem </h1>
+@if (banhLB2.Any())
+{
+	<div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="1000">
+		@* tự trôi qua ảnh tiếp theo mỗi 2s (1000ms) *@
+		<div class="carousel-inner rounded shadow-lg">
+			@{
+				int index = 0;
+			}
+			@foreach (var item in banhLB3)
+			{
+				<div class="carousel-item @(index == 0 ? "active" : "")">
+					<img src="@item.Hinhanh" class="d-block w-100 rounded" alt="@item.TenBanh" style="height: 450px; object-fit: cover;">
+					<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+						<h4 class="fw-bold text-white">@item.TenBanh</h4>
+					</div>
+				</div>
+				index++;
+			}
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselLB2" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselLB2" data-bs-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</button>
+	</div>
+}
+
+<!-- Hiển thị danh sách bánh dạng card -->
+<div class="container">
+	<div class="row row-cols-1 row-cols-md-3 g-4">
+		@foreach (var item in banhLB3.Take(3))
+		{
+			<div class="col">
+				<div class="card h-100 shadow-lg border-2 border-pink">
+					<a asp-action="Details" asp-route-id="@item.MaBanh">
+						<img src="@item.Hinhanh" class="card-img-top rounded-top hover-img" alt="@item.TenBanh" style="height: 250px; object-fit: cover;">
+					</a>
+					<div class="card-body text-center">
+						<h5 class="card-title text-pink fw-bold">@item.TenBanh</h5>
+						<p class="card-text text-danger fw-bold fs-5">@item.Gia.ToString() VNĐ</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	<!-- Nút "Xem thêm" chuyển đến trang collections/banhLB2 -->
+	<div class="text-center mt-4">
+		<a href="/collections/Index?LoaiBanh=Bánh Kem" class="btn btn-outline-dark fw-bold px-5 py-2">
+			Xem thêm
+		</a>
+	</div>
+
+</div>
+@* bánh yêu cầu *@
+<h1 class="text-center mt-5 mb-5 text-dark fw-bold fw-bolder text-decoration-underline"> Bánh theo yêu cầu của khách </h1>
+@if (banhLB2.Any())
+{
+	<div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="1000">
+		@* tự trôi qua ảnh tiếp theo mỗi 2s (1000ms) *@
+		<div class="carousel-inner rounded shadow-lg">
+			@{
+				int index = 0;
+			}
+			@foreach (var item in banhLB4)
+			{
+				<div class="carousel-item @(index == 0 ? "active" : "")">
+					<img src="@item.Hinhanh" class="d-block w-100 rounded" alt="@item.TenBanh" style="height: 450px; object-fit: cover;">
+					<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+						<h4 class="fw-bold text-white">@item.TenBanh</h4>
+					</div>
+				</div>
+				index++;
+			}
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselLB2" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselLB2" data-bs-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</button>
+	</div>
+}
+
+<!-- Hiển thị danh sách bánh dạng card -->
+<div class="container">
+	<div class="row row-cols-1 row-cols-md-3 g-4">
+		@foreach (var item in banhLB4.Take(3))
+		{
+			<div class="col">
+				<div class="card h-100 shadow-lg border-2 border-pink">
+					<a asp-action="Details" asp-route-id="@item.MaBanh">
+						<img src="@item.Hinhanh" class="card-img-top rounded-top hover-img" alt="@item.TenBanh" style="height: 250px; object-fit: cover;">
+					</a>
+					<div class="card-body text-center">
+						<h5 class="card-title text-pink fw-bold">@item.TenBanh</h5>
+						<p class="card-text text-danger fw-bold fs-5">@item.Gia.ToString() VNĐ</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	<!-- Nút "Xem thêm" chuyển đến trang collections/banhLB2 -->
+	<div class="text-center mt-4">
+		<a href="/collections/Index?LoaiBanh=Bánh Yêu Cầu" class="btn btn-outline-dark fw-bold px-5 py-2">
+			Xem thêm
+		</a>
+	</div>
+
+</div>
+@* bánh theo mùa *@
+<h1 class="text-center mt-5 mb-5 text-dark fw-bold fw-bolder text-decoration-underline"> Bánh đặc biệt theo mùa </h1>
+@if (banhLB2.Any())
+{
+	<div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="1000">
+		@* tự trôi qua ảnh tiếp theo mỗi 2s (1000ms) *@
+		<div class="carousel-inner rounded shadow-lg">
+			@{
+				int index = 0;
+			}
+			@foreach (var item in banhLB5)
+			{
+				<div class="carousel-item @(index == 0 ? "active" : "")">
+					<img src="@item.Hinhanh" class="d-block w-100 rounded" alt="@item.TenBanh" style="height: 450px; object-fit: cover;">
+					<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+						<h4 class="fw-bold text-white">@item.TenBanh</h4>
+					</div>
+				</div>
+				index++;
+			}
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselLB2" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselLB2" data-bs-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</button>
+	</div>
+}
+
+<!-- Hiển thị danh sách bánh dạng card -->
+<div class="container">
+	<div class="row row-cols-1 row-cols-md-3 g-4">
+		@foreach (var item in banhLB5.Take(3))
+		{
+			<div class="col">
+				<div class="card h-100 shadow-lg border-2 border-pink">
+					<a asp-action="Details" asp-route-id="@item.MaBanh">
+						<img src="@item.Hinhanh" class="card-img-top rounded-top hover-img" alt="@item.TenBanh" style="height: 250px; object-fit: cover;">
+					</a>
+					<div class="card-body text-center">
+						<h5 class="card-title text-pink fw-bold">@item.TenBanh</h5>
+						<p class="card-text text-danger fw-bold fs-5">@item.Gia.ToString() VNĐ</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	<!-- Nút "Xem thêm" chuyển đến trang collections/banhLB2 -->
+	<div class="text-center mt-4">
+		<a href="/collections/Index?LoaiBanh=Bánh Theo Mùa" class="btn btn-outline-dark fw-bold px-5 py-2">
+			Xem thêm
+		</a>
+	</div>
+	<br />
+	<br />
+	<br />
+	<br />
+</div>
+
+<style>
+	.text-pink {
+		color: #e83e8c;
+	}
+
+	.border-pink {
+		border-color: #e83e8c !important;
+	}
+
+	.hover-img {
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+		.hover-img:hover {
+			transform: scale(1.05);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+	.carousel-img {
+		height: 450px;
+		object-fit: cover;
+		transition: transform 0.5s ease-in-out;
+	}
+
+	.carousel-inner:hover .carousel-item img {
+		transform: scale(1.02);
+	}
+
+	.full-width-img {
+		width: 100vw; /* Chiều rộng bằng 100% viewport */
+		height: auto; /* Giữ nguyên tỉ lệ */
+		object-fit: cover;
+		display: block; /* Loại bỏ khoảng trống dư */
+	}
+
+	.text-center img {
+		display: block;
+		width: 100wv;
+		height: auto;
+	}
+
+</style>

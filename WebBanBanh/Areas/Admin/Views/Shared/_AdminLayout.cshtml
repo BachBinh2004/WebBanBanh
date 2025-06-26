@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebBanBanh</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebBanBanh.styles.css" asp-append-version="true" />
+
+    <!-- CSS tùy chỉnh -->
+    <style>
+        .custom-brand {
+            font-size: 40px !important; /* Điều chỉnh kích thước hợp lý */
+            font-weight: bold; /* Chữ đậm */
+            color: #003366 !important; /* Màu xanh lam tối */
+            text-transform: uppercase; /* Viết hoa */
+            letter-spacing: 1px; /* Giãn chữ */
+            display: block; /* Đảm bảo không bị ảnh hưởng bởi flexbox */
+            text-align: center; /* Căn giữa */
+        }
+
+        .navbar .custom-brand {
+            padding: 5px 0; /* Tăng khoảng cách với navbar */
+            margin: auto;
+            Căn giữa
+        }
+    </style>
+</head>
+
+<button id="backToTop" class="back-to-top">
+    &#8679;
+</button>
+
+
+@RenderSection("Scripts", required: false)
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
+            <div class="container-fluid">
+                <a class="navbar-brand custom-brand" asp-area="" asp-controller="Banhs" asp-action="Index">
+                    NIGHT of EDEN
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark" href="/collections/index" id="productsDropdown">
+                                Sản phẩm
+                            </a>
+
+                            <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                                <li><a class="dropdown-item" href="/collections/Index?LoaiBanh=Bánh Mì">Bánh Mì</a></li>
+                                <li><a class="dropdown-item" href="/collections/Index?LoaiBanh=Bánh Ngọt">Bánh Ngọt</a></li>
+                                <li><a class="dropdown-item" href="/collections/Index?LoaiBanh=Bánh Kem">Bánh Kem</a></li>
+                                <li><a class="dropdown-item" href="/collections/Index?LoaiBanh=Bánh Yêu Cầu">Bánh Yêu Cầu</a></li>
+                                <li><a class="dropdown-item" href="/collections/Index?LoaiBanh=Bánh Theo Mùa">Bánh Theo Mùa</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Banhs" asp-action="GioiThieu">
+                                Giới Thiệu về NIGHT of EDEN
+                            </a>
+                        </li>
+                        <li class="nav-item ms-auto d-flex align-items-center">
+
+                            <a href="/CartItems/Index">
+                                <img src="~/image/giohang.png" alt="Giỏ hàng" width="30" height="30">
+                            </a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" /> @* xử lý đăng nhập *@
+                </div>
+            </div>
+        </nav>
+    </header>
+    @{
+        var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+        var action = ViewContext.RouteData.Values["action"]?.ToString();
+    }
+
+    @if (controller == "Banhs" && action == "Index")
+    {
+        <div class="text-center mt-0">
+            <img src="~/image/slideshow1.png" alt="Ảnh" class="full-width-img" />
+        </div>
+    }
+
+    <div class="container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            LeQuocAnh_BachTheBinh_HuynhQuocDai - <a asp-area="" asp-controller="Home" asp-action="Privacy">Tổng kết</a>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS (Nên đặt cuối thẻ <body>) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery (nếu bạn sử dụng jQuery trong dự án) -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- nút top-->
+    <!-- Chatbot Icon -->
+    <div id="chatbotIcon" class="chatbot-icon" onclick="toggleChatbox()">
+        💬
+    </div>
+
+    <!-- Chatbox -->
+    <div id="chatbot-box" class="chatbox" style="display: none;">
+        <div id="chatbot-header">Chatbot</div>
+        <div id="chatbot-messages"></div>
+        <div id="chatbot-input">
+            <input type="text" id="chatbot-textbox" placeholder="Nhập câu hỏi..." />
+            <button id="chatbot-send">Gửi</button>
+        </div>
+    </div>
+
+    <!-- Nút quay lại đầu trang -->
+    <button id="backToTop" class="back-to-top" style="display: none;">↑</button>
+
+    <style>
+        .chatbot-icon {
+            position: fixed;
+            bottom: 140px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .chatbox {
+            position: fixed;
+            bottom: 200px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 0px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+
+    <script>
+                document.addEventListener("DOMContentLoaded", function () {
+            var backToTopButton = document.getElementById("backToTop");
+            var chatbotIcon = document.getElementById("chatbotIcon");
+            var chatbotBox = document.getElementById("chatbot-box");
+            var chatbotMessages = document.getElementById("chatbot-messages");
+            var chatbotInput = document.getElementById("chatbot-textbox");
+            var chatbotSend = document.getElementById("chatbot-send");
+
+            // ✅ Hiển thị nút khi cuộn xuống 300px
+            window.addEventListener("scroll", function () {
+                if (window.scrollY > 300) {
+                    backToTopButton.style.display = "block";
+                    chatbotIcon.style.display = "flex";
+                } else {
+                    backToTopButton.style.display = "none";
+                    chatbotIcon.style.display = "none";
+                    chatbotBox.style.display = "none";
+                }
+            });
+
+            // ✅ Cuộn lên đầu trang khi nhấn nút back-to-top
+            backToTopButton.addEventListener("click", function () {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+
+            // ✅ Định nghĩa và gắn sự kiện cho chatbot
+            function toggleChatbox() {
+                chatbotBox.style.display = chatbotBox.style.display === "none" || chatbotBox.style.display === "" ? "block" : "none";
+            }
+            chatbotIcon.addEventListener("click", toggleChatbox);
+
+            // ✅ Xử lý gửi tin nhắn chatbot
+            chatbotSend.addEventListener("click", function () {
+                var userMessage = chatbotInput.value.trim();
+                if (userMessage === "") return;
+
+                // ✅ Hiển thị tin nhắn của người dùng
+                chatbotMessages.innerHTML += `<div><b>Bạn:</b> ${userMessage}</div>`;
+                chatbotInput.value = "";
+
+                // ✅ Gửi yêu cầu đến API chatbot
+                fetch("https://localhost:7102/api/chatbot/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question: userMessage })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Lỗi API: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data || !data.reply) {
+                        throw new Error("Dữ liệu phản hồi không hợp lệ.");
+                    }
+
+                    // ✅ Hiển thị câu trả lời từ chatbot
+                    chatbotMessages.innerHTML += `<div><b>Chatbot:</b> ${data.reply}</div>`;
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                })
+                .catch(error => {
+                    console.error("Lỗi gọi API:", error);
+                    chatbotMessages.innerHTML += `<div><b>Chatbot:</b> Không thể kết nối đến máy chủ.</div>`;
+                });
+            });
+        });
+
+
+    </script>
+
+
+</body>
+</html>
